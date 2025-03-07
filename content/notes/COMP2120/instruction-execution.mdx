@@ -59,13 +59,19 @@ title: Instruction Execution Cycle
         `0000 0001 0010 0011` represents an addition (0000) of the numbers in memory locations 2 (0010) and 3 (0011) and store the result in memory location 1 (0001).
 
         The instruction might sometimes also be expressed in hex format: `0x0123`.
-    
-    !!! eg "Example LD"
-    
-        `0110 0000 0010 0001` represents loading the value from memory location 2 (0010) into memory location 1 (
-        0001).
 
-WHAT IS 2 WORD????
+!!! infor "Two-word Instructions"
+
+    When an instruction needs to read from or write to main memory, the main memory address are too long to fit in the operands. Instead, the address is fed in the word following the instruction word.
+
+    !!! eg "Example LD"
+
+        LD would have the following format:
+        ```math
+        \underbrace{\text{[ Opcode of LD ]}}_{1 \text{ Byte}}\underbrace{\text{[ Source operand (src) ]}}_{\text{Set as 0x00}}\underbrace{\text{[ Addressing Model ]}}_\text{Set as 0xFF}\underbrace{\text{[ Destination operand (dst) ]}}_\text{Destination register}\underbrace{\text{[ Main Memory Address ]}}_\textbf{1 word}
+        ```
+
+        Therefore `0x0600FF03 0000003C` represents loading the contents from main memory at address `0x0000003C` to the R3 register.
 
 !!! info "Branch / jump instructions"
 
