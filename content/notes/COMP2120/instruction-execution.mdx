@@ -68,14 +68,19 @@ title: Instruction Execution Cycle
 
         LD would have the following format:
         ```math
-        \underbrace{\text{[ Opcode of LD ]}}_{1 \text{ Byte}}\underbrace{\text{[ Source operand (src) ]}}_{\text{Set as 0x00}}\underbrace{\text{[ Addressing Model ]}}_\text{Set as 0xFF}\underbrace{\text{[ Destination operand (dst) ]}}_\text{Destination register}\underbrace{\text{[ Main Memory Address ]}}_\textbf{1 word}
+        \underbrace{\text{[  Opcode of LD  ]}}_{1 \text{ Byte}}\underbrace{\text{[  Source operand (src)  ]}}_{\text{Set as 0x00}}\underbrace{\text{[  Addressing Model  ]}}_\text{Set as 0xFF}\underbrace{\text{[  Destination operand (dst)  ]}}_\text{Destination register}\underbrace{\text{[  Main Memory Address  ]}}_\textbf{1 word}
         ```
 
         Therefore `0x0600FF03 0000003C` represents loading the contents from main memory at address `0x0000003C` to the R3 register.
 
 !!! info "Branch / jump instructions"
 
-    A **condition code** is used to determine if a branch should be taken, placed in *src1*.
+    Branch operations are two-word instructions. It has the format of:
+    ```math
+    \underbrace{\text{[  Opcode  ]}}_{1\text{ byte}}\underbrace{\text{[  Condition Code  ]}}_{1\text{ byte}}\underbrace{\text{[  Addressing Mode (0xFF)  ]}}_{1\text{ byte}}\underbrace{\text{[  Not used (0x00)  ]}}_{1\text{ byte}}\underbrace{\text{[  Address of Target Instruction  ]}}_\textbf{1 word}
+    ```
+
+    A **condition code** is used to determine if a branch should be taken. If the flags of the previous ALU operation satisfies the condition, the computer will jump to execute the instruction stored in the given address (the second word).
 
     | Operator | Code | Hex Code | Description |
     |---|---|---|---|
