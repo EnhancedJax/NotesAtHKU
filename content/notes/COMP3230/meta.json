@@ -1,0 +1,11 @@
+{
+  "title": "ACCT1101",
+  "semester": "2025 Fall",
+  "description": "Principles of operating systems",
+  "root": true,
+  "icon": "Computer",
+  "pages": [
+    "index"
+  ],
+  "wip": true
+}
