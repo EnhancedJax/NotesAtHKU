@@ -1,0 +1,9 @@
+{
+  "title": "COMP3230",
+  "semester": "2025 Fall",
+  "description": "Principles of operating systems",
+  "root": true,
+  "icon": "HatGlasses",
+  "pages": ["index"],
+  "wip": true
+}
