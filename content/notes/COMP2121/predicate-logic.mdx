@@ -1,0 +1,96 @@
+---
+title: Predicate Logic
+---
+
+## Predicate logic
+
+### Definitions
+
+!!! tip "Predications"
+
+    Recall propositions are statements that are either true of false. Predicates **implements** the statements to become functions, which accepts input to produce a truth value. Assigning the predicate to a variable function we get a **propositional function**.
+
+    ```math
+    \underbrace{P(x): \overbrace{f(\overbrace{x}^{\text{subject}})}^\text{predicate}}_{\text{propositional function}}
+    ```
+
+    **Given a subject value**, $P(x)$ becomes a **proposition** and returns a truth value.
+
+
+!!! info "The Domain"
+
+    The domain of a predicate is the set of all possible values that the variables in the predicate can take.
+
+    !!! eg "Example"
+        
+        The domain for predicate $x > 0$ = $\mathbb{R}$
+
+!!! tip "Quantifiers"
+
+    Recall $P(x)\rightarrow \{T, F\}$ given $x$. Quantifiers are used to **generalize** the truth value of a predicate over a domain, converting the propositional function to a **proposition**.
+
+    | Symbol | Name | Meaning | 
+    | --- | --- | --- | 
+    | $\forall$ | Universal quantifier | For all | 
+    | $\exists$ | Existential quantifier | There exists | 
+    | $\exists!$ | Unique quantifier | There exists exactly one |
+
+    The **scope** of a quantifier is the part of the statement that the quantifier applies to. 
+
+    !!! eg "Example universal"
+
+        Consider $P(x): x^2 > x$. We convert to proposition / statement using quantifiers:
+        ```math
+        \forall x \in \mathbb{Z}\setminus\{0,1\}, P(x)
+        ```
+        Notice the $P(x)$ at the end means that for the previous quantifier, the result is true (recall $p$ = true, $\neg p$ = false). We can also write as:
+        ```math
+        \forall x (x \in \mathbb{Z}\setminus\{0,1\} \rightarrow x^2 > x)
+        ```
+        Where $x^2 > x$ is the predicate, interchangable with $P(x)$.
+    
+    !!! eg "Example exists and unique"
+
+        Consider $P(x): x = 1$. The statement can be written as
+        ```math
+        \forall x\ \exists!\ x, P(x)\quad\text{or}\quad\forall x\in\{1\}, P(x)
+        ```
+
+### Methods
+
+!!! tip "Laws"
+
+    | Name | Law | Example |
+    | --- | --- | --- |
+    | De Morgan's (universal negation) | $\neg \forall x P(x) \equiv \exists x \neg P(x)$ | Negation of "everyone loves math" is "someone doesn't love math" |
+    | De Morgan's (existential negation) | $\neg \exists x P(x) \equiv \forall x \neg P(x)$ | Negation of "someone loves math" is "everyone doesn't love math" |
+    | Distribution (universal conjunction) | $\forall x (P(x) \land Q(x)) \equiv \forall x P(x) \land \forall x Q(x)$ | "Everyone loves math and physics" is "everyone loves math and everyone loves physics" |
+    | Distribution (existential disjunction) | $\exists x (P(x) \lor Q(x)) \equiv \exists x P(x) \lor \exists x Q(x)$ | "Someone loves math or physics" is "someone loves math or someone loves physics" |
+
+    Note that we cannot distrubte existential quantifiers over conjunctions, or universal quantifiers over disjunctions. (logical fallacy)
+
+!!! info "Nested quantifier rules"
+
+    Quantifiers are nested when **one quanitifier is within the scope of another**.
+
+    We can negate propositions with nested quantifiers by **successively applying De Morgan's laws**.
+
+    !!! eg "Example"
+
+        Consider scenario of keys and doors. Consider proposition function $P(x,y): x$ can open $y$. Domain of $x$ is the set of keys, $y$ the set of doors. 
+
+        | Statements | Expressions | 
+        | --- | --- |
+        | There exists a key that can open all doors | $\exists x\forall y, P(x,y)$ |
+        | For all doors, there exists a key that opens it | $\forall y\exists x, P(x,y)$ |
+        | Any key can open any door | $\forall x\forall y, P(x,y)$ |
+        | At least one door can be open by a key | $\exists y\exists x, P(x,y)$ |
+        | No door can be opened by any key | $\neg\exists y\forall x, P(x,y)$ |
+
+        We can also write the final statement as:
+        ```math
+        \begin{align*}
+            \neg\exists y\forall x, P(x,y) &= \forall y\neg\forall x, P(x,y) \\
+            &= \forall y\exists x, \neg P(x,y)
+        \end{align*}
+        ```

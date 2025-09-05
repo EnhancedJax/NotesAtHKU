@@ -4,6 +4,16 @@
   "description": "Introductory microeconomics",
   "root": true,
   "icon": "Coins",
-  "pages": ["index", "cost-and-benefit"],
-  "wip": true
+  "pages": [
+    "index",
+    "cost-and-benefit",
+    "comparative-advantage",
+    "supply-and-demand",
+    "elasticity",
+    "taxes-and-subsidies",
+    "ceil-floor",
+    "externalities",
+    "public-goods",
+    "profit-maximization"
+  ]
 }

@@ -4,6 +4,17 @@
   "description": "Introduction to business analytics ",
   "root": true,
   "icon": "ChartArea",
-  "pages": ["index"],
-  "wip": true
+  "pages": [
+    "index",
+    "probabilities",
+    "decision-analysis",
+    "statistics",
+    "linear-regression",
+    "logistic-regression",
+    "pca",
+    "clustering",
+    "cart",
+    "text"
+  ],
+  "wip": false
 }

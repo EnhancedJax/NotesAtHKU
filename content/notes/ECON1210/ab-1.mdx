@@ -1,0 +1,349 @@
+---
+title: Cost and benefit AB
+---
+
+Modifications from 2025 Spring Quiz.
+
+## 2025 Spring Quiz 1 Q1
+
+Debra is thinking about going to Disneyland with her friend.  Debra is willing to pay HK\$X to go to Disneyland.  A ticket to Disneyland costs HK\$411 and she will have to cancel her part-time job that pays HK\$488.  Normally, she would be unwilling to do the part-time job for less than HK\$259.  (Debra views the unpleasantness of the part-time job as an offset against her salary.)  Debra will decide to go to Disneyland if and only if X is larger than or equal to [Answer] dollars.
+
+<Collapsible title="Solution">
+
+She will only go if $ES(D) \geq ES(P)$:
+
+```math
+\begin{align*}
+X - 411 &\geq 488 - 259\\
+X &\geq 640
+\end{align*}
+```
+
+</Collapsible>
+
+## 2022 Spring Final Q4 Modified 
+
+Consider Harris’s decision on the number of camping trips in a year. Suppose Harris’s total benefit (in dollars) from n camping trips in the coming year can be described by the following function:
+
+```math
+TB(n) = 1324\sqrt{n}
+```
+
+For example, the total benefit of 4 camping trips is $1324\sqrt{4} = 2648$ dollars. Suppose, at the beginning of every year, he has to spend 540 dollars to refurbish his camping gear, and the cost (transportation, etc.) is 190 dollars per trip.
+
+Based on this information, we expect Harris to do X camping trips in the coming year. (Assume that the number of camping trips can only be integers.)
+
+<Collapsible title="Solution">
+
+Will only continue doing if $MB(n) \geq MC(n)$:
+
+```math
+\begin{align*}
+MB(n) & = \frac{dTB}{dn} = \frac{1324}{2\sqrt{n}}\\
+MC(n) & = \frac{d(540+190n)}{dn} = 190\\
+\frac{1324}{2\sqrt{n}} & \geq 190\\
+n & \leq 12.14\\
+\end{align*}
+```
+Therefore, $X = 12$.
+
+</Collapsible>
+
+## 2022 Fall Midterm Q4 Modified
+
+Maggie’s total benefit of consuming n scoops of ice-cream is $TB(n)=104n−n^2$, in which n can only be integers. Suppose the price of ice-cream is \$40 per scoop.
+
+We would expect Maggie to consume X scoops of ice-cream.
+
+<Collapsible title="Solution">
+
+Will only consume if $MB(n) \geq MC(n)$:
+
+```math
+\begin{align*}
+MB(n) & = 104 - 2n\\
+MC(n) & = 40\\
+
+104 - 2n &\geq 40\\
+n &\leq 32
+\end{align*}
+```
+
+Therefore, $X = 32$.
+
+</Collapsible>
+
+## 2022 Spring Final Q2 Modified
+
+The equations below show Calvin’s estimated per-month benefit of watching n movies on an online movie platform. (Assume that n can take only integer values.)
+
+```math
+\begin{aligned}\text{Total benefit(dollars): }&TB(n)=653n-7n^{2}\\\text{Marginal benefit(dollars): }&MB(n)=660-14n\\\text{Average benefit(dollars): }&AB(n)=653-7n\end{aligned}
+```
+
+Upon paying a monthly subscription fee of 19 dollars, Calvin will be eligible to watch any movie at P dollars per movie. If Calvin decides to watch 27 movies per month under the scheme, then we can infer that the price per movie (P) is less than or equal to X dollars and more than Y dollars.
+
+<Collapsible title="Solution">
+
+Given $MC(n) = P$, each decision must satisfy $MB(n) \geq MC(n)$:
+
+```math
+\begin{align*}
+MB(27) &\geq P\\
+282 &\geq P\\
+\text{and}\\
+MB(28) &< P\\
+268 &< P\\
+\end{align*}
+```
+
+Therefore, $X = 282$ and $Y = 268$.
+
+
+</Collapsible>
+
+## 2021 Summer Midterm Q2 Modified
+
+The equation below shows Ben’s benefit of consuming n cups of tea and tea is perfectly divisible and can be consumed at any arbitrary quantity (say, 3.14 cups).
+
+```math
+\text{Total benefit: }TB(n)=229n-10n^2\\\text{Average benefit: }AB(n)=229-10n\\\text{Marginal benefit: }MB(n)=229-20n
+```
+
+Suppose the price is HKD 35 per cup. Ben’s economic surplus from consuming tea would be HKD X.
+
+<Collapsible title="Solution">
+
+Will only consume if $MB(n) \geq MC(n)$:
+
+```math
+\begin{align*}
+MB(n) & = 229 - 20n\\
+MC(n) & = 35\\
+229 - 20n & \geq 35\\
+n & \leq 9.7
+\\
+ES(n) & = TB(n) - TC(n)\\
+& = 229n - 10n^2 - 35n\\
+ES(9.7) & = 940.9
+\end{align*}
+```
+
+Therefore, $X = 940.9$.
+
+</Collapsible>
+
+## 2021 Fall Midterm Q5-6
+
+The factory owner is considering how many workers to be allocated to three production lines A, B and C, so as to maximize the total output. The following table shows the output that will be produced in these production lines as a function of the number of workers deployed. For example, when 2 workers are sent to line C, a total of 439 units of output will be produced there.
+
+| Number of Workers | Line A | Line B | Line C |
+|-------------------|--------|--------|--------|
+| 1 | 247| 232| 230|
+| 2 | 446| 423| 439|
+| 3 | 624| 572| 627|
+| 4 | 775| 693| 800|
+| 5 | 925| 802| 957|
+| 6 | 1031   | 861| 1086   |
+| 7 | 1090   | 908| 1163   |
+| 8 | 1134   | 949| 1206   |
+
+Suppose 8 workers are hired. To maximize the output, the factory owner should allocate X worker(s) to line A, Y worker(s) to line B, Z worker(s) to line C.
+
+Now suppose the factory owner wants to produce at least 1847 units of output. Suppose the factory owner always allocate the N workers among the three production lines to maximize total output. Then N must be at least equal to K
+
+<Collapsible title="Solution">
+
+Convert to marginal benefit table:
+
+| Number of Workers | Line A | Line B | Line C |
+|-------------------|--------|--------|--------|
+| 1 | 247| 232| 230|
+| 2 | 199| 191| 209|
+| 3 | 178| 149| 188|
+| 4 | 151| 121| 173|
+| 5 | 150| 109| 157|
+| 6 | 106| 59 | 129|
+| 7 | 59 | 47 | 77 |
+| 8 | 44 | 41 | 43 |
+
+For 8 workers, trace from largest to smallest:
+
+$247 \rightarrow 232 \rightarrow 230 \rightarrow 209 \rightarrow 199 \rightarrow 191 \rightarrow 188 \rightarrow 178\implies X=3,Y=2,Z=3$
+
+Then, we simply sum from largest to smallest and count the number of terms to find K:
+
+$247 + 232 + 230 + 209 + 199 + 191 + 188 + 178 + 173 = 1847\implies K=9$
+
+</Collapsible>
+
+## 2021 Summer Midterm Q4 Modified
+
+The equations below show Felicia’s benefit of consuming n cups of tea and of consuming m cups of coffee, and tea and coffee are perfectly divisible and can be consumed in any arbitrary quantity (say, 1.25 cups).
+
+```math
+\text{Total benefit of tea: T}B(n)=248n-10n^2\\\text{Average benefit of tea: }AB(n)=248-10n\\\text{Marginal benefit of tea: }MB(n)=248-20n\\\text{Total benefit of coffee: }TB(m)=156m-5m^2\\\text{Average benefit of coffee: }AB(m)=156-5m\\\text{Marginal benefit of coffee: }MB(m)=156-10m
+```
+
+Suppose Felicia can only drink 6 cups in total. Felicia would consume X cups of tea.
+
+<Collapsible title="Solution">
+
+Best decision: Equalize net margins (in this case marginal benefit):
+
+```math
+\begin{align*}
+MB_T(n) &= MB_C(m)\\
+248 - 20n &= 156 - 10m\\
+9.2 &= 2n - m,\quad\text{substitute $m = 6 - n$}\\
+9.2 &= 2n - 6 + n\\
+n &= 5.07
+\end{align*}
+```
+
+Therefore, $X = 5.07$
+
+
+</Collapsible>
+
+## 2021 Fall Midterm Q7 Modified
+
+You are considering to take a 3 days staycation to Park Island during the Christmas holiday. You are willing to pay for \$P for the trip. You have already bought a round trip ferry ticket at \$155, which is non-refundable. To go to Park Island, you will have to apply for a leave from the part-time job where you normally work 8-hours a day at \$23 per hour. You will live in your friend’s place so you don’t have to spend anything on accommodation. You currently live in a hotel with a daily rent of \$419 that is non-refundable and typically pay \$88 per day for food. You estimated that you need to pay a total of \$421 for food during the staycation. 
+
+You would go to the staycation if P is larger than X.
+
+<Collapsible title="Solution">
+
+Note that the ticket and hotel are sunk costs. Will only go if $ES(P) \geq ES(W)$:
+
+```math
+\begin{align*}
+P - 421 &\geq 23\times8\times3 - 88\times3\\
+P &\geq 709
+\end{align*}
+```
+
+Therefore, $X = 709$.
+
+</Collapsible>
+
+## 2023 Spring Midterm Q4 Modified
+
+Coleman is deciding whether to go to school by bus or by taxi. It takes 50 minutes to travel to school by bus and the bus fare costs \$27. It takes 20 minutes to travel to school by taxi and the taxi fare costs \$152. By taking taxi instead of bus, Coleman can use the saved time to pursue either one of the following two activities: (1) delay the wake-up time by 30 minutes, and he is willing to pay \$1.1/minute to sleep more; or (2) give a morning call to his girlfriend (who is on an exchange program in Japan) for 30 minutes, and he is willing to pay \$1.2/minute to talk with his girlfriend. In addition, the crowdedness problem in bus makes Coleman willing to pay $P to travel by taxi instead of to travel by bus.
+
+Based on the information, Coleman should choose to take bus if P is smaller than X.
+
+<Collapsible title="Solution">
+
+Will only take taxi if $ES(T) \geq ES(B)$:
+
+```math
+\begin{align*}
+B(\text{Morning call}) & = 30\times1.2 = 36 > B(\text{Sleep})\\
+\\
+ES(T) &\geq ES(B)\\
+36 + P - 152 &\geq 0 - 27\\
+P &\geq 89
+\end{align*}
+```
+
+Therefore, $X = 89$. (If greater, will take taxi).
+
+</Collapsible>
+
+## 2021 Summer Midterm Q2 Modified
+
+Maggie would like to attend a three-hour singing class for which she has to pay a fee of \$234. Her benefit from the singing class is \$652. If she does not go to the class, she can sing for three hours in a performance with an hourly wage of W dollars per hour. Or she can watch The Voice on TV, for three hours for free, which she would be willing to pay a total of \$221 to watch. Assume there are no other costs or benefits for the above events. Maggie should attend the singing lesson if W is less than or equal to X.
+
+<Collapsible title="Solution">
+
+Will only attend class *over* performance if $ES(C) \geq ES(P)$:
+
+```math
+\begin{align*}
+ES(C) &\geq ES(P)\\
+652 - 234 &\geq 3W\\
+W &\leq 139.33
+\end{align*}
+```
+
+Therefore, $X = 139.33$.
+
+</Collapsible>
+
+## 2021 Spring Midterm Q3 Modified
+
+Alvin is thinking of going to an e-sport match online which will last 1.5 hours. He could tutor students for HKD 113 per hour if he does not go to the match. Alternatively, he could use the same time to work as a part-time waiter in a restaurant instead and earn a total of HKD 295. He enjoys the tutoring job and waiter job just enough that he is willing to pay for his additional MTR fare of HKD 10, to reach either job and do it for free. 
+
+If the price of the e-sport match ticket is HKD 210, his opportunity cost of going to the e-sport match is HKD X.
+
+<Collapsible title="Solution">
+
+Find opportunity cost by using maximum of T and W. Notice that the WTP MTR fare adds to the benefit of $ES(T),ES(W)$, however it is also mentioned that he is willing to do it for free, which also adds it to the cost, hence it is ignored.
+
+```math
+\begin{align*}
+OC(E) &= C(E) + \max\{ES(T),ES(W)\}\\
+&= 210 + \max\{113\times1.5, 295\}\\
+&= 210 + 295\\
+&= 505
+\end{align*}
+```
+
+Therefore, $X = 505$.
+
+</Collapsible>
+
+## 2024 Spring Midterm Q6-7 Modified
+
+A coal mine owner is thinking of how to allocate mining hours to three workers, Andy, Betty and Cathy. The following table shows the daily compensation (in \$) the owner has to pay to each worker, as a function of the number of hours they spend on mining each day. For instance, Cathy requires a total compensation of \$158 to mine for two hours on a day.
+
+| Number of hours | Andy | Betty | Cathy |
+|-----------------|------|-------|-------|
+| 1   | 146  | 134   | 72|
+| 2   | 319  | 278   | 158   |
+| 3   | 533  | 549   | 252   |
+| 4   | 781  | 853   | 492   |
+| 5   | 1123 | 1256  | 789   |
+| 6   | 1476 | 1729  | 1257  |
+| 7   | 1876 | 2266  | 1765  |
+| 8   | 2546 | 2875  | 2352  |
+
+(a) Suppose a total of 6 mining hours are allocated each day. To minimize the total daily compensation to the three workers, the mine owner should allocate A1 hour(s) to Andy, B1 hour(s) to Betty, and C1 hour(s) to Cathy each day.
+
+(b) Now suppose there are no constraints on total mining hours to be allocated each day. If the benefit of each mining hour to the mine owner is \$314.9, to maximize the total economic surplus from mining, the mine owner should allocate A2 hour(s) to Andy, B2 hour(s) to Betty, and C2 hour(s) to Cathy each day.
+
+<Collapsible title="Solution">
+
+First convert to marginal cost table:
+| Number of hours | Andy | Betty | Cathy |
+|-----------------|------|-------|-------|
+| 1   | 146 (6)  | 134 (4)   | 72 (1)|
+| 2   | 173 (7)  | 144 (5)   | 86 (2)|
+| 3   | 214 (8)  | 271 (11)   | 94 (3)|
+| 4   | 248 (10)  | 304 (13)   | 240 (9)   |
+| 5   | 342 (14)  | 403 (16)   | 297 (12)   |
+| 6   | 353 (15)  | 473 ()   | 468 ()   |
+| 7   | 400 ()  | 537 ()   | 508 ()   |
+| 8   | 670 ()  | 609 ()   | 587 ()   |
+
+For (a), trace from lowest to highest for 6 hours:
+
+$72(1) \rightarrow 86(2) \rightarrow 94(3) \rightarrow 134(4) \rightarrow 144(5) \rightarrow 146(6)\implies A1=1,B1=2,C1=3$
+
+For (b), we pick a random order index, let's say 13. We calculate $ES(13)$ by referencing the original table. Then we calculate surrounding values until we find a max value.
+
+```math
+\begin{align*}
+    ES(13) &= 314.9\times 13 - (781 + 853 + 789)\\
+    & = 1670.7\\
+    ES(14) &= 314.9\times 14 - (1123 + 853 + 789)\\
+    & = 1643.6\\
+    ES(12) &= 314.9\times 12 - (781 + 549 + 789)\\
+    & = 1659.8\\
+\end{align*}
+```
+
+As $13$ is the hours which produces max $ES$, $A2=4,B2=4,C2=5$.
+
+</Collapsible>

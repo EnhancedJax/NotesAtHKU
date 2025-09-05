@@ -4,6 +4,17 @@
   "description": "Computer Organization",
   "root": true,
   "icon": "Cpu",
-  "pages": ["index"],
-  "wip": true
+  "pages": [
+    "index",
+    "evolution",
+    "digital-logic",
+    "number-representation",
+    "instructions",
+    "memory",
+    "storage",
+    "io",
+    "os-support",
+    "processor-risc"
+  ],
+  "wip": false
 }

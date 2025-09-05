@@ -4,18 +4,20 @@ title: Cost and Benefit
 
 When taking an action $n$, benefit is your **gain**, and cost is your **loss** by choosing that action. We *ignore* all costs that are not related to choosing the action.
 
+If there is X amount of money taht one is **willing to pay** for an action, it goes towards the **benefit** of that action.
+
 !!! tip "Economic surplus and opportunity cost"
 
-    Economic surplus, or net benefit, for taking an action $n$ is given by: $ES(n) = B(n) - C(n)$.
+    Economic surplus, or net benefit, for taking an action $n$ is given by: 
+    
+    ```math
+    ES(n) = TB(n) - TC(n),\quad T=\text{total}
+    ```
 
     **Opportunity cost** is the cost of choosing one action $n$ over another ($n_2$):
 
-    $OC(n) = C(n) + ES(n_2)$
-
-    The economic surplus of choosing $n$ over $n_2$ is:
-
     ```math
-    ES(n) = B(n) - OC(n)
+    OC(n) = C(n) + ES(n_2)
     ```
 
 !!! note "Sunk cost"
@@ -28,21 +30,20 @@ When taking an action $n$, benefit is your **gain**, and cost is your **loss** b
 
     Marginal benefit/cost ($MB,MC$) means **additional** gain/loss from taking one more unit of action $n$.
 
-    **Only take action when $MB \geq MC$.**
+    $MX(n) = TX(n) - TX(n-1),\quad X\in\{B,C\}$, for integer $n$
 
-    $MX(n) = TX(n) - TX(n-1),\quad X\in\{B,C\}$, for integer $n$ and $T$ being total.
-
-    If the unit of action is continous, the value $MX$ will be given.
+    If the unit of action is continous, the value $MX$ will be given, or use the derivative: $MX(n) = \frac{dTX}{dn}$.
 
     Net margin: $NM(n) = MB(n) - MC(n)$
 
 !!! info "Cost-benefit principle"
 
     A rational person:
-    - **Only take action when $ES \geq 0$**
-    - **Best action is when $ES$ is maximized**
+    - Only take action when $ES \geq 0$
+    - **Only keep taking action when $NM \geq 0$**
+    - **Best action is when $ES$ is maximized:** $ES_1(n) \geq ES_2(n)$
 
-    We can make decisions about finding the **optimal** number of units to take between two or more actions by **equalizing** the net margins.
+    We can make decisions about finding the **optimal** number of units to take between two or more actions by **equalizing** the net margins. 
 
     !!! eg "2023 Summer Midterm Q3"
 

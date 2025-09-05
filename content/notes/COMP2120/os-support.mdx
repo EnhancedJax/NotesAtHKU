@@ -1,0 +1,82 @@
+---
+title: Operating System Support
+---
+
+!!! note "Operating system"
+
+    The operating system (OS) is a software that controls the execution of programs and manages hardware resources. It allows a computer to be used efficiently and conveniently.
+    
+    Services provided by the OS:
+    * Program Creation – through compilers, assemblers, editors, debuggers etc.
+    * Program Execution – through loading programs into memory and preparing resources for the program
+    * I/O Access – through providing a uniform I/O interface while the implementation is left to the OS
+    * File System Management
+    * System Access – control access to system resources to prevent unauthorised users
+    * Error Detection and Response
+    * Accounting – collecting usage statistics and monitoring performance parameters
+
+!!! info "OS Protection Scheme"
+
+    Most OSs uses two modes of operation: user mode and kernel mode. The CPU will execute in different modes to facilitate protection. Some OSs may use up to four modes. Some resources are only accessible in kernel mode.
+
+    An OS is supposed to be well-tested, while bugs may exist in user programs.
+
+    OS functions are usually accessed via special entry points called **system calls**. Upon a system call, the CPU will switch from user mode to kernel mode.
+
+!!! info "Process scheduling"
+
+    To fully utilise the CPU, the CPU is shared among multiple processes. Each process is given a time slice to execute.
+
+    When it uses up its time slice, the CPU will suspend the execution and switch to another process.
+
+    The OS maintains a queue of processes in which the order of execution depends on several factors, such as priority,waiting time, whether the process has used up its time slice (i.e. CPU-bound jobs), the current system load, etc.
+
+## Virtual memory
+
+Main problems of multi-tasking in a system:
+* The demand of memory is often greater than available physical memory. *(say we have 3 apps, each app uses 2G memory, and we have 3G memory.)*
+* Hard to program and manage apps that access memory directly. *(how does app know which memory are safe to access?)*
+* Security issues *(apps can potentially access the same memory address)*
+
+ **Virtual memory** is a technique involving the use of *secondary storage* to simulate additional memory. 
+
+The system provides [*logical*](#physical-and-logical-address) addresses to applications. The system allocates *physical* addresses of memory and maps them to logical addresses, handled by **MMU** (Memory management unit). When content requested is not in memory, a [**page fault**](#demand-paging-&-page-fault) occurs, the OS will load the required page from *disk* to memory.
+
+[**Paging**](#paging-and-page-table) is a technique used to implement virtual memory. Because the time needed to access disk is *much longer* than memory, and by **principle of locality** (adjacent memory locations are likely to be accessed together), the OS loads a batch of data (page) from disk to memory when needed.
+
+!!! note "Physical and logical address"
+
+    **Physical** addresses are addresses to the physical memory, which is smaller.
+
+    **Logical** addresses - addressing space for the program. (e.g. if 32-bit addresses are used, addressing space is $0-4G$). This allows programs to access memories from index 0, and offloads handling of memory addresses to the OS.
+
+!!! tip "Paging and page table"
+
+    Physical memory is divided into fixed-size blocks called frames, and logical memory is divided into blocks of the same size called pages.
+    
+    Each process has its own logical address space, hence each process will be divided into several pages. The OS maintains a page table for each process.
+
+    Each page in logical address space has a corresponding page table entry (**PTE**). The format of a PTE is roughly:
+
+    | **V**alid | **P**rotection | **D**irty | Physical Frame # |
+    | --- | --- | --- | --- |
+    | 1 bit | n bits | 1 bit | n bits | 
+
+    * Valid Bit: Indicates whether the page is in memory or not.
+    * Protection Bits: Indicate the access rights of the page (read, write, execute, user/kernel access).
+    * Dirty Bit: Indicates whether the page has been modified or not.
+    * Physical Frame #: The frame number in physical memory where the page is stored.
+
+!!! tip "Demand Paging & Page Fault"
+
+    When a program is loaded, not all its pages are loaded at once. The OS only loads the pages needed.
+
+    When the program branches to another instruction on a page that is not in memory, a **page fault** occurs. The program will be suspended and the OS will take over to load the required page, then restart the program.
+
+    When the memory is full and no free frames are available, the OS will use different [replacement algorithms](memory#replacement-algorithms) to select a frame to be replaced. The *write back* strategy is always used, as write *through** to the HDD is too slow.
+
+!!! tip "Address Translation & TLB"
+
+    The logical address has a page # and an offset. The page number will be used to look up the page table to find the corresponding physical frame #. Then, after adding the offset, the physical address can be obtained and data can be fetched from the memory.
+
+    This process involves two memory accesses: (1) page table lookup and (2) data access. To speed up, a **Translation Lookaside Buffer** (TLB) is used. The TLB acts like a cache, which maintains a small number of valid PTEs. If a PTE is not in TLB, then the page table is consulted.

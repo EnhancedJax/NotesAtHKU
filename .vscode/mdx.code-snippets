@@ -1,0 +1,14 @@
+{
+  "Admonition": {
+    "scope": "markdown,mdx",
+    "prefix": "!!",
+    "body": ["!!! $1 \"$2\"", "\t", "\t $3"],
+    "description": "Admonition"
+  },
+  "Equation": {
+    "scope": "markdown,mdx",
+    "prefix": "`eq",
+    "body": ["```math", "\\begin{align*}", "\t$1", "\\end{align*}", "```"],
+    "description": "Equation"
+  }
+}

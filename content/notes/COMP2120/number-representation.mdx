@@ -1,0 +1,270 @@
+---
+title: Number Representation
+---
+
+## Value representation
+
+Computers have finite number of bits to represent numbers (e.g. $2^32$ for 32-bit).
+
+- **Overflow**: When the result of an operation is too large to be represented in the number of bits available.
+- **Underflow**: When the result of an operation is too small to be represented in the number of bits available.
+
+!!! tip "Radix number systems"
+
+    A position number system. Each digit $a_i$ is multiplied by the base $r$ raised to the power of its position $i$.
+
+    ```math
+    (a_na_{n-1}...a_1a_0)_r
+    ```
+
+!!! info "Radix-r to radix-10"
+
+    ```math
+    \text{Base 10 value} = \sum_{i=0}^{n-1} a_i \times r^i
+    ```
+
+!!! info "Radix-10 to radix-2"
+
+    **Integer part**: Repeatedly **divide** by 2 and record the **remainder**.
+
+    !!! eg "Example"
+
+        ```math
+        \begin{align*}
+            11 \div 2 &= 5 \text{ remainder } 1 \\
+            5 \div 2 &= 2 \text{ remainder } 1 \\
+            2 \div 2 &= 1 \text{ remainder } 0 \\
+            1 \div 2 &= 0 \text{ remainder } 1 \\
+            11 &= 1011_2
+        \end{align*}
+        ```
+
+    **Fractional part**: Repeatedly **multiply** by 2 and record the **integer** part.
+
+    !!! eg "Example"
+
+        ```math
+        \begin{align*}
+            0.25 \times 2 &= 0.5 \text{ integer } 0 \\
+            0.5 \times 2 &= 1.0 \text{ integer } 1 \\
+            0.25 &= 0.01_2
+        \end{align*}
+        ```
+
+    Conversion for $r=2^{n}$ can be done replacing division by $2$ with division by $2^n$.
+
+## Sign representation
+
+A function $f(b)$ represents the value of a binary number $b$ based on the sign representation.
+
+!!! note "Excess K"
+
+    Uses a **Sign bit**: 0 for positive, 1 for negative. The excess $K$ is added to the value to represent the sign.
+
+    - **Range**: $-K$ to $2^n - 1 - K$ where $n$ is the number of bits.
+    - Top half is positive, bottom half is negative.
+
+    ```math
+    f(b)=b-K
+    ```
+
+    !!! eg "Example"
+
+        - **Excess 127**: $-1$ is represented as $126_2$.
+        - **Excess 128**: $-1$ is represented as $127_2$.
+
+!!! note "One's complement"
+
+    Saves the leftmost bit for the sign. The binary representation is inverted for negative numbers.
+
+    - **Range**: $-2^{n-1}+1$ to $2^{n-1}-1$.
+
+    ```math
+    f(b)=\begin{cases}
+        b & \text{if } b \geq 0 \\
+        (2^n-1)-b \equiv \text{invert}\{b\} & \text{if } b < 0
+    \end{cases}
+    ```
+
+!!! tip "Two's complement"
+
+    Save leftmost bit for the sign. The binary representation is inverted and 1 is added for negative numbers.
+
+    - **Range**: $-2^{n-1}$ to $2^{n-1}-1$.
+
+    ```math
+    f(b)=\begin{cases}
+        b & \text{if } b \geq 0 \\
+        2^n-b \equiv \text{invert}\{b\}+1 & \text{if } b < 0
+    \end{cases}
+    ```
+
+    Only two's complement can sum up numbers of different signs without special cases, to get the sum.
+
+## Floating-point representation
+
+Represent a floating point binary number as long bits.
+
+!!! tip "IEEE Floating Point Format"
+
+    First convert the binary number to scientific notation and have a single digit to the left of the radix point (normalized):
+    ```math
+    \text{Value} = \mathrm{sign}\cdot(1.f)\cdot2^{e-b}
+    ```
+    Where $f$ is the Significand, $e$ is the exponent, and $b$ is the bias.
+    
+    The binary representation is:
+    ```math
+    \underbrace{[\text{sign}]}_{1 \text{ bit}} \underbrace{[\text{---}e\text{---}]}_{x \text{ bits}} \underbrace{[\text{------}f\text{------}]}_{l-x-1 \text{ bits}}
+    ```
+    * Sign bit: $+\text{ve} \implies 0$, $-\text{ve} \implies 1$
+    * Significand $f$: Add trailing zeros to fill bits of available length
+
+    The following table shows the parameters for multiple IEEE 754 formats:
+    | Parameter | Binary32 | Binary64 | Binary128 |
+    | --- | --- | --- | --- |
+    | Storage ($l$) | 32 bits | 64 bits | 128 bits |
+    | Exponent ($x$) | 8 bits | 11 bits | 15 bits |
+    | Bias ($b$) | 127 | 1023 | 16383 |
+
+    !!! eg "Converting 13.375 to IEEE Binary32"
+        
+        Binary32: $8,23,127$
+        ```math
+        13.375 \equiv 1101.001_2
+        ```
+
+        - Sign bit: $0$ *(positive)*
+        - **Normalize**: $+1.101001_2 \times 2^3$
+            - $f=101001_2$ *(ignore leading 1)*
+            - Significand: $10100100000000000000000$ *(add trailing zeros)*
+        - **Exponent**: $3$
+            - Biased Exponent: $3+127=130 \equiv 10000010_2$
+        
+        **Representation:** $0100\ 0001\ 0101\ 0110\ 0000\ 0000\ 0000\ 0000$
+
+    !!! eg "Converting Binary32 to decimal"
+
+        Consider $C0F210000_{16}$:
+        ```math
+        \underbrace{1}_{\text{Sign bit}}\ \underbrace{100\ 0000\ 1}_{\text{Exponent}}\ \ \underbrace{111\ 0010\ 0001\ 0000\ 0000\ 0000}_{\text{Significand}}
+        ```
+
+        - **Sign bit**: $1$ (negative)
+        - **Exponent**: $100\ 0000\ 1_2 = 129 \rightarrow 129-127=2$
+        - **Significand**: 
+            - Remove training 0s and add leading "1."
+            - $1.111\ 0010\ 0001_2 = 1.89111\dots_{10}$
+
+        ```math
+        \text{Value} = -1.89111 \times 2^2 = -7.56444
+        ```
+
+    Note that the range of $e$ is $1\rightarrow254$ for Binary32. $0$ and $255$ are reserved for special cases.
+
+!!! info "Representable numbers"
+
+    The range of floating point numbers is limited by the number of bits used for the significand and exponent. 
+    
+    For a given format with $E.bits$ exponent bits, $F.bits$ significand bits and $s=\begin{cases}1 & \text{if special case for 0 and } 2^e-1 \\ 0 & \text{otherwise}\end{cases}$:
+
+    * **Range**: 
+        * Bias value: $b=2^{E.bits-1}-1$
+        * All values: $\pm(1.f)\cdot2^{e-b}$
+        * Use smallest values: 
+            ```math
+            \begin{align*}
+                f=0_2, e=s \implies& \pm 1.0\cdot 2^{s-b}\\ 
+                =& \pm2^{s-b}
+            \end{align*}
+            ```
+        * Use largest values: 
+            ```math
+            \begin{align*}
+                f=111\dots_2 (\text{length: }F.bits) \rightarrow 1.111... =&\ 1 + 0.1 + 0.01 + \dots + 2^{-F.bits}\\
+                =&\ 2-2^{-F.bits}\ (\text{geometry series})\\ 
+                e=2^{E.bits}-1-s \implies& \pm(2-2^{-F.bits})\cdot2^{2^{E.bits}-1-s-(2^{E.bits-1}-1)}\\
+                = & \pm(2-2^{-F.bits})\cdot2^{2^{E.bits}-2^{E.bits-1}-s}
+                
+            \end{align*}
+            ```
+        * $\therefore \text{Value} \in \pm[2^{s-b},(2-2^{-F.bits})\cdot2^{2^{E.bits-1}-2^{E.bits}-s}]$
+    * **Spacing**:
+        * Represented numbers are **unevenly spaced** as spacing depends on exponent, which scales logarithmically.
+        * Spacing grows as we go further from 0 as scaling factor of $2^{e-(2^{E.bits-1}-1)}$.
+
+## Operations
+
+### 2's complement
+
+- **Addition**: Add numbers as unsigned, discard overflow.
+- **Subtraction**: Add the 2's complement of the number to be subtracted.
+- **Multiplication**: *Shift-and-add* unsigned numbers, and adjust sign.
+
+!!! note "Shift and add"
+
+    For each bit in the multiplier, if it is 1, add the multiplicand shifted by the position of the bit. 
+
+    To compute $11\times -13$:
+
+    ```
+        1011 - Multiplicand (11)
+       x1101 - Multiplier (13)
+    -------- (Shift by digit from right)
+        1011
+       0000.
+      1011..
+     1011...
+    -------- (Sum vertical)
+    10001111 - (-143)
+    ```
+    Result is negative: $10001111_2 \rightarrow 01110000_2 \rightarrow 01110001_2 = -143$
+    
+### Floating point
+
+!!! info "Addition and subtraction"
+
+    Basic steps:
+    1. Align exponents
+    2. Add / subtract number (exclude exponent)
+    3. [Normalize](#ieee-floating-point-format) result
+    4. Round to fit significand
+
+    !!! eg "Addition example"
+
+        To compute $1.1_2 \times 2^0 + 1.001 \times 2^1 \equiv 1.5 + 2.25$:
+        - Align exponents: $1.1_2 \times 2^0 + 10.01_2 \times 2^0$
+        - Add numbers: $10.01_2 + 1.1_2 = 11.11_2$
+        - Normalize: $1.111_2 \times 2^1$
+        - Result: $1.111_2 \times 2^1 = 3.75$
+
+    
+
+!!! info "Multiplication and division"
+
+    Basic steps:
+    1. Add / subtract exponents (subtract / add bias $b$ if working with IEEE)
+    2. Multiply / divide numbers
+    3. Normalize result
+    4. Round to fit significand
+    5. Determine sign
+
+    !!! eg "Multiplication example"
+
+        To compute $1.1_2 \times 2^0 \times 1.001_2 \times 2^1 \equiv 1.5 \times 2.25$:
+        - Add exponents: $0+1=1$
+        - Multiply numbers: $1.1_2 \times 1.001_2 = 1.1011_2$
+        - To normalize, use exponent: $11.011_2 \times 2^1$
+        - Normalize: $1.1011_2 \times 2^1$ (unchanged)
+        - Result: $1.1011_2 \times 2^1 = 3.375$
+
+        Note that we skipped subtracting bias as we're working with real binary numbers instead of a IEEE representation.
+    
+    !!! eg "Multiplication example (IEEE)"
+
+        To compute $3fc00000_{16} \times 40100000_{16} \equiv 1.5 \times 2.25$:
+        - Extract exponents: $3fc00000_{16} = 0\ 01111111\ 10000000000000000000000_2$, $40100000_{16} = 0\ 10000000\ 00100000000000000000000_2$
+        - Add exponents and subtract bias: $01111111_2 + 10000000_2 - 01111111_2 \equiv 127 + 128 - 127 = 10000000_2$
+        - Extract numbers by removing trailing zeros and multiply: $1.1_2 \times 1.001_2 = 1.1011_2$
+        - Normalize: $1.1011_2 \times 2^{10000000_2 - 01111111_2}$
+        - Result: $0\ 10000000\ 10110000000000000000000_2 = 3.375$

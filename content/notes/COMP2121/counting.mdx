@@ -1,0 +1,243 @@
+---
+title: Counting
+---
+
+The main idea is to apply the rules, and ideas from Sets and Functions, to analyze and enumerate possible outcomes of a computational problem.
+
+## Basic counting principles
+
+!!! note "Mutually exclusive"
+
+    Two sets are said to be **mutually exclusive** (or *pairwise disjoint*) if they have no elements in common.
+
+!!! tip "Product rule"
+
+    "If there are $n_1$ ways to do task 1, and $n_2$ ways to do task 2, then there are $n_1 \cdot n_2$ ways to do both tasks."
+
+    If $A_1, A_2, \ldots, A_n$ are $n$ finite sets, then:
+
+    ```math
+    |A_1 \times A_2 \times \cdots \times A_n| = |A_1| \cdot |A_2| \cdots |A_n|
+    ```
+
+    !!! eg "Example"
+
+        Suppose you have $n$ different types of ice cream, $m$ different types of cones, and $k$ different toppings. The number of different sundaes you can make is:
+
+        ```math
+        |A| = |I| \cdot |C| \cdot |T| = n \cdot m \cdot k
+        ```
+
+!!! tip "Sum rule"
+
+    "If a task can be done either in one of $n_1$ ways or in one of $n_2$ ways (n_1 and n_2 are mutually exclusive), then there are $n_1 + n_2$ ways to do the task."
+
+    If $A_1, A_2, \ldots, A_n$ are $n$ **mutually exclusive** finite sets, then:
+
+    ```math
+    |A_1 \cup A_2 \cup \cdots \cup A_n| = |A_1| + |A_2| + \cdots + |A_n|
+    ```
+
+    !!! eg "Example"
+
+        Suppose you can choose your FYP from 3 lecturers. Lecturer A has 2 projects, lecturer B has 3 projects, and lecturer C has 4 projects. The number of different FYPs you can choose is:
+
+        ```math
+        |A| = |A| + |B| + |C| = 2 + 3 + 4 = 9
+        ```
+
+!!! tip "Subtraction rule"
+
+    "If a task can be done in either $n_1$ or $n_2$ ways, then number of ways to do task is $n_1+n_2-n_3$, where $n_3$ is the number of ways to do the task in both ways."
+
+    The subtraction rule is **inclusion-exclusion principle** for two sets. The following is the general formulation:
+
+    If $A_1, A_2, \ldots, A_n$ are $n$ finite sets, then:
+
+    ```math
+    \begin{aligned}
+    |A_1 \cup A_2 \cup \cdots \cup A_n| & = \sum_{i=1}^n |A_i| \\
+    & - \sum_{1 \leq i < j \leq n} |A_i \cap A_j| \\
+    & + \sum_{1 \leq i < j < k \leq n} |A_i \cap A_j \cap A_k|\\
+    & - \cdots\\
+    & + (-1)^{n+1} |A_1 \cap A_2 \cap \cdots \cap A_n|
+    \end{aligned}
+    ```
+
+    !!! eg "Example"
+
+        The number of integers from 1 to 100 that are divisible by 2, 3 or 5 is:
+
+        ```math
+        \begin{align*}
+            \text{Set of elements divisible by 2} : A_1 & = \lfloor \frac{100}{2} \rfloor = 50 \\
+            \text{Set of elements divisible by 3} : A_2 & = \lfloor \frac{100}{3} \rfloor = 33 \\
+            \text{Set of elements divisible by 5} : A_3 & = \lfloor \frac{100}{5} \rfloor = 20 \\
+            A_1 \cap A_2 &  = \lfloor \frac{100}{6} \rfloor = 16 \\
+            A_1 \cap A_3 &  = \lfloor \frac{100}{10} \rfloor = 10 \\
+            A_2 \cap A_3 &  = \lfloor \frac{100}{15} \rfloor = 6 \\
+            A_1 \cap A_2 \cap A_3 &  = \lfloor \frac{100}{30} \rfloor = 3 \\
+            \text{Total} & = A_1 + A_2 + A_3 - (A_1 \cap A_2) - (A_1 \cap A_3) - (A_2 \cap A_3) + (A_1 \cap A_2 \cap A_3) \\
+            & = 50 + 33 + 20 - (16 + 10 + 6) + 3 \\
+            & = 74
+
+        \end{align*}
+        ```
+
+!!! tip "Division rule"
+
+    "If a task can be done in $n$ ways, and if there are $k$ indistinguishable objects, then the number of ways to do the task is $\frac{n}{k}$."
+
+    If a finite set $ A = A_1 \cup A_2 \cup \cdots \cup A_n$, where $A_1, A_2, \ldots, A_n$ are $n$ **pairwise mutually exclusive** (disjoint) finite sets, then:
+
+    ```math
+    n = \frac{|A|}{k},\quad k = |A_1| + |A_2| + \cdots + |A_n|
+    ```
+
+    !!! eg "Example"
+
+        To sit four people around a circular table, when two seatings are consider to be the same, if each person has same left and right neighbour:
+
+        We know that there are $4!$ ways to arrange four people in a line. However, when we arrange them in a circle, we can rotate the arrangement without changing the relative positions of the people. Hence, we need to divide by 4 (the number of people), which $k=4$.
+
+        ```math
+        \text{Number of ways} = \frac{4!}{4} = 3! = 6
+        ```
+
+!!! tip "Pigeonhole principle"
+
+    If $n$ items are placed into $k$ boxes, then there is at least one box that contains at least $\lceil \frac{n}{k} \rceil$ items.
+
+    !!! eg "Example"
+
+        During a month with 30 days, a basketball team plays at least one game a day, but no more than 45 games in a month. 
+
+        To show that there must be a period of some numbers of consecutive days, during which the team plays exactly $14$ games.
+
+        Let $a_1, a_2, \ldots, a_{30}$ be the number of games played cummulative.
+
+        Observe $a_1 < a_2 < \cdots < a_{30}$, and $1 \leq a_i \leq 45$, which $15 \leq a_i + 14 \leq 59$.
+
+        Combining sequences, we have $a_1,a_2,\ldots,a_{30}, a_1+14, a_2+14, \ldots, a_{30}+14$. 
+
+        **Key 1**: There are a total of $30+30=60$ items, but they must be less than $59$.
+
+        **Key 2**: As team must be at least one game a day, each $a_i$ is unique in $a_1,a_2,\ldots,a_{30}$ (and all $a_i+14$ are unique).
+
+        This implies that in the combined sequence, at least one of the $a_i$ and $a_i+14$ must be equal, which means that there is a period of some numbers of consecutive days, during which the team plays exactly $14$ games.
+
+## Permutations and Combinations
+
+!!! tip "Permutations"
+
+    The number of ways to arrange $r$ of $n$ objects is:
+
+    ```math
+    P(n,r) = {}^nP_r = \frac{n!}{(n-r)!},\quad P(n,n) = n!
+    ```
+
+!!! info "Arrangements of indistinguishable objects"
+
+    To arrange $n$ objects where there are $n_1$ indistinguishable objects of type 1, $n_2$ indistinguishable objects of type 2, ..., $n_k$ indistinguishable objects of type $k$, the number of arrangements is:
+
+    ```math
+    \frac{n!}{n_1! n_2! \cdots n_k!}
+    ```
+
+!!! info "Arrangement with repetition"
+
+    The number of ways to arrange $k$ of $n$ objects, where each object can be chosen more than once, is:
+
+    ```math
+    \binom{n+k-1}{k}
+    ```
+
+!!! tip "Combinations"
+
+    The number of ways to choose $r$ objects from $n$ objects is:
+
+    ```math
+    C(n,r) = {}^nC_r = {n \choose r} = \frac{n!}{r!(n-r)!},\quad C(n,0) = 1
+    ```
+
+
+!!! info "Property of binomial coefficients"
+    
+    The *property of binomial coefficients* states that the number of ways to choose $r$ objects from $n$ objects is equal to the number of ways to choose $n-r$ objects from $n$ objects:
+
+    ```math
+    C(n,r) = C(n,n-r)
+    ```
+
+    This is because choosing $r$ objects from $n$ objects is equivalent to leaving out $n-r$ objects from $n$ objects.
+
+!!! info "Distributions of indistinguishable objects"
+
+    The number of ways to put $n$ **indistinguishable** items in $r$  **distinguisable** boxes, where each box can hold any number of items, is:
+
+    ```math
+    \binom{n+r-1}{r-1}
+    ```
+
+    This is also called the *stars and bars* theorem.
+
+    !!! eg "Example 1"
+
+        The number of solution to equation $x_1+x_2+x_3=10$, where $x_1,x_2,x_3 \geq 0$, is the number of ways to put 10 indistinguishable items in 3 distinguishable boxes, which is:
+
+        ```math
+        \binom{10+3-1}{3-1} = \binom{12}{2} = 66
+        ```
+    !!! eg "Example 2"
+
+        The number of solution to equation $x_1+x_2 \leq 10$, can be solved by using the equation $x_1+x_2+x_3=10$, where $x_3$ is the number of items in the third box, which is empty. The number of ways to put 10 indistinguishable items in 3 distinguishable boxes, which is:
+
+        ```math
+        \binom{10+3-1}{3-1} = \binom{12}{2} = 66
+        ```
+    
+    !!! eg "Example 3"
+
+        The number of solutions to equation $x_1+x_2=20$, $-3 \leq x_i \leq 18$:
+
+        First shift the condition to match *Example 1*: $x_i=y_i-3$, where $21 \geq y_i \geq 0$. The equation becomes $y_1+y_2=26$.
+
+        The number of ways to solve $y_1+y_2=26$, where $y_1,y_2 \geq 0$ is $\binom{26+2-1}{2-1}$
+
+        But note the upper bound of $y_i$ is $21$. Using the [**Inclusion-Exclusion**](#subtraction-rule) principle, we need to subtract the cases where $y_i > 21$. Let $y'=y_i-22$, where $y' \geq 0$. 
+
+        For the equation $y' + y_2 = 4$, the number of ways to solve $y' + y_2 = 4$ is $\binom{4+2-1}{2-1}$. There are $\binom{2}{1}$ ways to choose which $y_i$ is greater than 21.
+        Hence, the total number of solutions is:
+
+        ```math
+        \binom{26+2-1}{2-1} - \binom{4+2-1}{2-1} \cdot \binom{2}{1} 
+        ```
+
+!!! info "Combinations with repetition"
+
+    The number of ways to choose $r$ objects from $n$ objects, where each object can be chosen more than once, is:
+
+    ```math
+    n^r
+    ```
+
+!!! info "Derrangements"
+
+    The number of ways to arrange $n$ objects such that **no object is in its original position** is called a **derangement**. The number of derangements of $n$ objects is denoted by $!n$ and can be calculated using the following formula:
+
+    ```math
+    !n = n! \sum_{i=0}^{n} \frac{(-1)^i}{i!}
+    ```
+
+!!! info "Counting surjections"
+
+    The number of [surjections](functions/#characteristics-of-functions) from a set of size $n$ to a set of size $k$ is given by the following formula:
+
+    ```math
+    S(n \to k) = \sum_{i=0}^{k} (-1)^i \binom{k}{i} (k-i)^n
+    ```
+
+    This can also be expressed as:
+    * The number of functions $f: |n| \to |k|$ such that $f$ is a surjection.
+    * Distribute $n$ distinguishable objects into $k$ distinguishable boxes, such that no box is empty.
+    * The number of equivalence relations on a set of size $n$ with exactly $k$ [equivalence classes](sets-and-relations/#equivalence-class).

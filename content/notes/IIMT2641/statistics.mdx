@@ -1,0 +1,172 @@
+---
+title: Statistics
+---
+
+## Random variables
+
+A numerical description of the outcome of a random experiment is called a *random variable*. It can be either *discrete* or *continuous*.
+
+!!! note "Notation"
+
+    Random variables are denoted with capital letters $X$  
+    The possible outcomes are denoted with regular letters $x$  
+    Probability that the outcome of $X$ is $x$ is denoted by $P(X=x)$
+
+!!! tip "Expected value and Variance"
+
+    $E(X^n)=\sum(x^n\cdot P(X=x))$ gives the expected value, which represents the mean value (outcome) of the random variable.  
+    $Var(X)=E(X^2)-E(X)^2$ gives the variance, which is a measure of the variability of the random variable's outcomes.
+
+!!! tip "Operations of $E(X)$ and $Var(X)$"
+
+    $E(X+Y)=E(X)+E(Y)$, which any addition/subtraction function within $E()$ can be expanded.  
+
+    If $X$ and $Y$ are independent:  
+
+    $Var(X+Y) = Var(X) + Var(Y),\quad\quad E(XY) = E(X)\cdot E(Y)$  
+    For $Y=aX+b$:  
+    $E(Y)=aE(X)+b,\quad\quad Var(Y)=a^2Var(X)$
+
+## Probability distributions
+
+A *continuous* random variable has probabilities as the area under its curve. Hence, $P(X=n)$ for any outcome $n$ is $0$. A *discrete* random variable has specific probabilities assigned to an outcome.
+
+!!! note "Operation on continuous ranges"
+
+    $P(X<x)=P(X\leq x)$  
+    $P(X>x)=1 - P(X<x)$  
+    $P(a\leq X\leq b)=P(X<b)-P(X<a)$
+
+!!! note "Operation on discrete ranges"
+
+    $P(X<x)=P(X\leq x-1)$  
+    $P(X>x)=1-P(X\leq x)$  
+    $P(a\leq X\leq b)=P(X\leq b)-P(X\leq a-1)$
+
+### Probability distribution functions
+
+A *p.d.f* is a continuous function that returns the probability of the given outcome. The following is an example of a p.d.f:
+
+```math
+X\sim f(x) = \begin{cases} Kx^2 & 0 \leq x \leq 1 \\ 0 & \text{otherwise} \end{cases}
+```
+
+!!! tip "Using the function"
+
+    $P(X=x)=0$  
+    $P(a<X<b)=P(a\leq X\leq b)=\int_{a}^{b}f(x)dx$  
+    
+    Note that $\int_{\infty}^{-\infty}f(x)dx = 1$, as the total probability of any event is 1. This condition *must be true* for $f(x)$ to be a valid p.d.f. Hence for the example $K=3$
+
+!!! tip "Expected value"
+
+    $E(X^n)=\int_{\infty}^{-\infty}x^nf(x)dx$
+
+### Cumulative distribution function
+
+To obtain a *c.d.f* $X'\sim F(x)$ where $P(X'=x) = P(X < x)$, all we have to do is integrate the p.d.f:
+
+```math
+F(X)=\int f(x)dx 
+```
+
+Using our example:
+
+```math
+F(X)=\begin{cases} 1 & x > 1 \\ x^3 & 0 < x < 1 \\ 0 & x < 0 \end{cases} 
+```
+
+And to convert a c.d.f back to its p.d.f, all we have to do is differentiate $F(x)$:
+
+```math
+f(x)=\frac{d}{dx}F(x) 
+```
+
+
+### Normal distribution
+
+The **Normal** distribution is given by the following formula (which you don't have to memorize):
+
+```math
+X\sim N(\mu, \sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}},\quad\quad\text{where }\underbrace{\mu}_{\text{mean}},\underbrace{\sigma^2}_{\text{variance}}
+```
+
+To calculate $P(X<x)$, we have to *standardize* our $N$ by $Z\sim N(0, 1)$, $P(X<x)=P(Z<\frac{x-\mu}{\sigma})$. Here $Z$ is the *standard normal variable*.
+
+!!! info "Reading the Z-table"
+
+    For $P(Z<z)=p$, to find $p$, locate the header and leftmost column in the z-table such that their *sum* is $z$. The corresponding intersecting cell is $p$.  
+    $Z_p$ gives the value $z$ in $P(Z<z)=p$
+
+## Sampling
+
+!!! tip "Sampling notation"
+
+    For a given population of size $N$, $\mu$ is the true mean and $\sigma^2$ is the true variance.
+
+    A sample is a subset of the population of size $n$. The sample mean is $\bar{x}$ and the sample variance is $s^2$. They can be calculated as:
+
+    ```math
+    \bar{x}=\frac{1}{n}\sum x_i,\quad\quad s^2=\frac{1}{n-1}\sum(x_i-\bar{x})^2
+    ```
+
+!!! info "Definitions"
+
+    The statistics for each random sample observation of the population are **random**.
+
+    The **sampling distribution** is the distribution of the statistics of the random samples. 
+    
+
+!!! tip "Central Limit Theorem"    
+
+    The random variable $\bar{X}$ is the mean of a random sample of $n$ observations if:
+    
+    1. The observations are independent.
+    2. The observations are identically distributed.
+    3. $n \geq 30$.
+
+    ```math
+    \bar{X}=\frac{X_1+X_2+\dots+X_n}{n}
+    ```
+
+    If $X$ is normally distributed:
+
+    ```math
+    \bar{X}\sim N(\mu, \frac{\sigma^2}{\sqrt{n}}),\quad \frac{\sigma^2}{\sqrt{n}}\text{ is the standard error (deviation)}
+    ```
+
+    The standard error captures how *off* the sample statistics are from the true population value. The value **decreases as n increases**.
+
+    The **central limit theorem** states that the sampling distribution of the sample mean approaches a normal distribution as the sample size increases, regardless of the shape of the population distribution.
+
+## Hypothesis testing
+
+!!! info "Test values"
+    
+    **Test Statistic**: Result that is calculated from the sample
+
+    **Null Hypothesis $H_0$**: Hypothesis assumed correct
+
+    **Alternative Hypothesis $H_1$**: Parameter if assumption shown wrong
+
+!!! tip "Conducting tests"
+
+    1. **Define null and alternative hypotheses**
+        * Upper tail test: $H_1:\mu > \mu_0$
+        * Lower tail test: $H_1:\mu < \mu_0$
+        * Two-tailed test: $H_1:\mu \neq \mu_0$
+        * $H_0$ is the opposite of $H_1$
+    2. **Identify variables $\bar{x}, \mu_0, n, \alpha, p$, and $\sigma$ OR $s$**
+    3. **Calculate statistic value:**
+        * Given **standard deviation** $\sigma$: z-score $z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}$
+        * Given **sample standard deviation** $s$: t-score $t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}$
+    4. **Calculate p-value (use corresponding table)**
+        * Upper tail: $1-P(Z<z)$ or $1-P(T<t)$
+        * Lower tail: $P(Z<z)$ or $P(T<t)$
+        * Two-tailed: $2P(Z<-|z|)$ or $2P(T<-|t|)$
+    5. **Compare p-value with $\alpha$:**
+        * If $p<\alpha$, reject $H_0$ (evidence against $H_0$)
+        * If $p>\alpha$, do not reject $H_0$ (no evidence against $H_0$)
+    6. **State conclusion**
+
+    Note that the p-value **does not** tell the chance that $H_0$ is true or false, but rather the chance of observing the sample data if $H_0$ is true.

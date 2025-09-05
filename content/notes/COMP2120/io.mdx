@@ -1,0 +1,51 @@
+---
+title: Input and Output
+---
+
+## Input and Output
+
+!!! note "I/O Modules"
+
+    An *interface* to one or more external devices through data links, and an *interface* betwee nthe CPU and memory via the system bus.
+
+    | Requirement | Description |
+    | --- | --- | 
+    | **Asynchronous timing** | Handles timing differences between the device and the system.              |
+    | **Command decoding** | Interprets commands sent from the system to the device.                    |
+    | **Data exchange** | Manages the transfer of data between the system and the device. |
+    | **Status reporting** | Provides information about the device's current state. |
+    | **Address recognition** | Identifies the correct device for communication. |
+    | **Data buffering** | Temporarily stores data to handle speed mismatches between components. |
+    | **Error detection and correction** | Identifies and resolves errors during data transmission. | 
+
+!!! tip "I/O Register Mapping"
+
+    The CPU operates I/O devices by reading/writing from/to the devices’ status/control/data registers. The *I/O device registers* are mapped in two ways:
+    1. **Memory-mapped**: mapped into main memory address space, accessed as if memory locations.
+    2. **Port-mapped**: mapped into separate address space, accessed using special I/O instructions.
+
+## I/O Techniques
+
+The CPU starts by sends a command to the I/O devices. There are three types of I/O techniques:
+
+!!! tip "Programmed I/O"
+
+    The CPU executees a program to control I/O devices, and actively waits for the device to complete, wasting CPU time.
+
+!!! tip "Interrupt-driven I/O"
+
+    The CPU will carry on with other tasks. When the I/O module finishes, it sends an interrupt signal to the CPU. The CPU will then handle the interrupt and return to its tasks.
+    
+    The CPU sends a interrupt acknowledge signal (INTA) to the I/O module to indicate receipt of the interrupt signal. The last instruction of the interrupt routine is a return from interrupt instruction (RETI). 
+
+!!! tip "Direct Memory Access (DMA)"
+
+    Use **Input-Output Processor** (IOP) that  steals cycles from CPU.  CPU sees elongated cycle and wait until cycle is over. Interruptions handled within one instruction cycle.
+    
+![](../../../public/img/COMP2120/io-techniques.png)
+
+!!! info "Difference between Interrupt-Driven I/O and DMA"
+
+    The “interruption” in DMA is within one instruction execution cycle, while the interruption in Interrupt-Driven I/O is after the  nstruction execution cycle.
+
+![](../../../public/img/COMP2120/io-vs.png)

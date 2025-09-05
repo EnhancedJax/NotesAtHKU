@@ -1,0 +1,115 @@
+---
+title: Proofs
+---
+
+## Rules of Inference
+
+Proofs are valid arguments to show the truth of statement. **Valid arguments** are a sequence of statements that end with a conclusion, where each conclusions follows the truth of preceding statements. We need to use **rules of inference** to show the validity of the argument.
+
+!!! tip "Basis Rules"
+
+    | Name | Tautology | Example | 
+    | --- | --- | --- |
+    | Modus Ponens | $(p \land (p \rightarrow q)) \rightarrow q$ | If it is raining, then the ground is wet, it is raining, therefore the ground is wet |
+    | Modus Tollens | $((p \rightarrow q) \land \neg q) \rightarrow \neg p$ | If it is raining, then the ground is wet, the ground is not wet, therefore it is not raining |
+    | Hypothetical Syllogism | $((p \rightarrow q) \land (q \rightarrow r)) \rightarrow (p \rightarrow r)$ | If it is raining, then the ground is wet, if the ground is wet, then the plants are watered, therefore if it is raining, then the plants are watered |
+    | Disjunctive Syllogism | $(p \lor q) \land \neg p \rightarrow q$ | Either it is raining or the ground is wet, it is not raining, therefore the ground is wet |
+    | Addition | $p \rightarrow (p \lor q)$ | If it is raining, then it is raining or the ground is wet |
+    | Simplification | $(p \land q) \rightarrow p$ | If it is raining and the ground is wet, then it is raining |
+    | Resolution | $((p \lor q) \land (\neg p \lor r)) \rightarrow q \lor r$ | If stay home, study. If study, get A. Therefore, if stay home, get A. |
+
+    !!! eg "Example application"
+
+        There has been a robbery. We know that the burglars left in a car. We also know that 
+
+        1. Only A or B or C can be involved.
+        1. If C does a robbery, he needs A alongside.
+        1. B does not know how to drive.
+
+        Can you identify a burglar with certainty?
+
+        <BlockSep />
+
+        Propositions:
+        
+        1. $A \lor B \lor C$
+        1. $C \rightarrow A$
+        1. $\neg B \rightarrow (C \lor A)$
+
+        Where A,B,C are the propositions that A, B, C are involved in the robbery. The master proposition: 
+        ```math
+        \begin{align*}
+            & (A \lor B \lor C) \land (C \rightarrow A) \land (\neg B \rightarrow (C \lor A)) \\
+            & (A \lor C) \land (C \to A) & \text{By resolution of 1 and 3}\\
+            & (A \lor C) \land (\neg C \lor A) & \text{By implication of 2}\\
+            & A & \text{By resolution of remaining}\\
+        \end{align*}
+        ```
+
+## Using Rules of Inference
+
+!!! tip "Methods of proofs"
+
+    To prove a statement of the form $p \rightarrow q$ is true, we can use the following methods:
+
+    | Name | Assumption | Goal |
+    | --- | --- | --- |
+    | Direct | $p$ | $q$ | 
+    | Contrapositive | $\neg q$ | $\neg p$ |
+    | Contradiction | $\neg p$ | Show a false statement |
+
+    For other statement forms:
+
+    | Name | Forms | Goal |
+    | --- | --- | --- |
+    | Cases | $p_1 \lor p_2 \lor \ldots \to q$ | $p_1 \to q \land p_2 \to q \land \ldots$ |
+    | Equivalence | $p \leftrightarrow q$ | $p \rightarrow q \land q \rightarrow p$ |
+    | Vacuous | $p\to q$ | $\neg p$ (Since always true for $p$ false) |
+    | Trivial | $p\to q$ | $q$ (Since always true for $q$ true) |
+    | Constructive existence | $\exists x P(x)$ | $a: P(a)$ (Witness)
+    | Non-constructive existence | $\exists x P(x)$  | Prove without finding witness (e.g. using theorems) | 
+    | Induction | $\forall x P(x)$ | $P(1)\land\forall k[P(k)\to P(k+1)]$
+
+    !!! eg "Direct proof example"
+
+        Prove that if $n$ is an even integer, then $n^2$ is also an even integer.
+
+        <BlockSep />
+
+        Let $n = 2k$ for some integer $k$. Then $n^2 = (2k)^2 = 4k^2 = 2(2k^2)$. Since $2k^2$ is an integer, $n^2$ is even.
+    
+    !!! eg "Contrapositive proof example"
+
+        Prove that if $n^2$ is an odd integer, then $n$ is also an odd integer.
+
+        <BlockSep />
+
+        Assume $n$ is an even integer. Then $n = 2k$ for some integer $k$. Then $n^2 = (2k)^2 = 4k^2 = 2(2k^2)$. Since $2k^2$ is an integer, $n^2$ is even. Therefore, if $n^2$ is odd, then $n$ is odd.
+    
+    !!! eg "Contradiction proof example"
+
+        Prove that $\sqrt{2}$ is irrational.
+
+        <BlockSep />
+
+        Assume $\sqrt{2}$ is rational. Then $\sqrt{2} = \frac{a}{b}$ for some integers $a$ and $b$. We can assume that $a$ and $b$ are coprime. Then $2 = \frac{a^2}{b^2}$, so $2b^2 = a^2$. Since $a^2$ is even, $a$ is even. Then $a = 2k$ for some integer $k$. Then $2b^2 = (2k)^2 = 4k^2$, so $b^2 = 2k^2$. Since $b^2$ is even, $b$ is even. But $a$ and $b$ are coprime, so this is a contradiction. Therefore, $\sqrt{2}$ is irrational.
+    
+    !!! eg "Cases proof example"
+
+        Prove that there are no rational solutions to $x^3 + x + 1 = 0$.
+
+        <BlockSep />
+
+        Let $\frac{p}{q}$ be rational solutions. Then we have $\frac{p^3}{q^3} + \frac{p}{q} + 1 = 0 \rightarrow p^3+pq^2+q^3=0$. Consider the following cases:
+        ```math
+        \begin{cases}
+            p,q \text{even} & \text{Contradiction as not reduced form} \\
+            p \text{even}, q \text{odd} & \text{even} + \text{even} + \text{odd} = \text{odd} \neq 0 \\
+            p \text{odd}, q \text{even} & \text{odd} + \text{even} + \text{even} = \text{odd} \neq 0 \\
+            p,q \text{odd} & \text{odd} + \text{odd} + \text{odd} = \text{odd} \neq 0 \\
+        \end{cases}
+        ```
+
+        Since in all possible cases we get no rational solutions, proved.
+
+    

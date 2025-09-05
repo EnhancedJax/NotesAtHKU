@@ -1,0 +1,119 @@
+---
+title: Text Analytics
+---
+
+## Introduction
+
+The main idea is to **count** words or find **correlated** words in text.
+
+!!! note "Clean up irregularities"
+
+    * Change all words to either lower-case or upper-case
+    * Remove punctuation
+
+    Beware that sometimes these features are important, so the decision should be made **tailored to the specific problem**
+
+!!! note "Remove unhelpful terms"
+
+    * Remove connectives like `the`, `is`, `at`
+
+!!! note "Stemming"
+
+    Words like `argue` and `argued` in different grammatical forms can be represented by a common **stem** `argu`. 
+
+    There are many ways to do this, such as using a *database of words* or *rule-based algorithm*
+
+!!! note "Sentiment analysis"
+
+    Our course focuses on using `Syuzhet` for sentiment analysis. Sentiment means the **emotion** of a person or an organization. It is often used in social media, marketing and advertising to understand how people feel about something.
+
+## Textual analysis in R-lang
+
+First install required (recommended for course) packages:
+
+```r
+# Install
+install.packages("tm")  # for text mining
+install.packages("SnowballC") # for text stemming
+install.packages("wordcloud") # word-cloud generator 
+install.packages("RColorBrewer") # color palettes
+install.packages("syuzhet") # for sentiment analysis
+install.packages("ggplot2") # for plotting graphs
+# Load
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+library("syuzhet")
+library("ggplot2")
+```
+
+Clean up the text:
+
+```r
+text <- readLines('TeamHealthRawDataForDemo.txt')
+text<-enc2utf8(text) #transfer the characters into utf8 coding
+# Load the data as a corpus
+TextDoc <- Corpus(VectorSource(text))
+
+#Replacing "/", "@" and "|" with space
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+TextDoc <- tm_map(TextDoc, toSpace, "/")
+TextDoc <- tm_map(TextDoc, toSpace, "@")
+TextDoc <- tm_map(TextDoc, toSpace, "\\|")
+
+# Convert the text to lower case
+TextDoc <- tm_map(TextDoc, tolower)
+# Remove numbers
+TextDoc <- tm_map(TextDoc, removeNumbers)
+# Remove english common stopwords
+TextDoc <- tm_map(TextDoc, removeWords, stopwords("english"))
+# Remove your own stop word
+# specify your stopwords as a character vector
+TextDoc <- tm_map(TextDoc, removeWords, c("s", "company","team")) 
+# Remove punctuations
+TextDoc <- tm_map(TextDoc, removePunctuation)
+# Eliminate extra white spaces
+TextDoc <- tm_map(TextDoc, stripWhitespace)
+# Text stemming - which reduces words to their root form
+TextDoc <- tm_map(TextDoc, stemDocument)
+```
+
+### Word frequency analysis
+
+Calculate word frequency:
+
+```r
+# Build a term-document matrix
+TextDoc_dtm <- TermDocumentMatrix(TextDoc)
+dtm_m <- as.matrix(TextDoc_dtm)
+# Sort by descearing value of frequency
+dtm_v <- sort(rowSums(dtm_m),decreasing=TRUE)
+dtm_d <- data.frame(word = names(dtm_v),freq=dtm_v)
+```
+
+Visualization:
+
+```r
+# Plot the most frequent words
+barplot(dtm_d[1:5,]$freq, las = 2, names.arg = dtm_d[1:5,]$word,
+        col ="lightgreen", main ="Top 5 most frequent words",
+        ylab = "Word frequencies")
+
+#generate word cloud
+set.seed(1234)
+wordcloud(words = dtm_d$word, freq = dtm_d$freq, min.freq = 5,
+          max.words=100, random.order=FALSE, rot.per=0.40, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+### Sentiment analysis:
+
+The following are the 4 main methods of the `Syuzhet` package:
+
+```r
+d<-get_nrc_sentiment(text) # This generates the sentiment analysis results
+bing_vector <- get_sentiment(text, method="bing")
+afinn_vector <- get_sentiment(text, method="afinn")
+nrc_vector <- get_sentiment(text, method="nrc")
+```

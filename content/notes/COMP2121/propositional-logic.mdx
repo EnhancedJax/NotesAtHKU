@@ -1,0 +1,92 @@
+---
+title: Logic & Satisfiability
+---
+
+## Propositional Logic
+
+The area of Logic that deals with propositions:
+
+!!! info "Propositions"
+
+    A proposition $p$ is a statement that is either true or false, but not both, which must **delcare a fact** and must have a truth value.
+
+    e.g. "It is raining", "2 + 2 = 4", "The sky is blue"
+
+The following logic operators are similar to the ones in digital logic:
+
+!!! tip "Definitions"
+
+    | Precedence | Definition | Symbol | Meaning | Truth table TLRF |
+    | --- | --- | --- | --- | --- | 
+    | 1 | Negation | $\neg p$ | Not $p$ | - |
+    | 2 | Conjunction | $p \land q$ | $p$ and $q$ | TFFF | 
+    | 3 | Disjunction | $p \lor q$ | $p$ or $q$ | TTTF | 
+    | 4 | Exclusive or | $p \oplus q$ | $p$ or $q$ but not both (XOR) | FTTF | 
+    | 5 | Implication | $p \rightarrow q$ | If $p$ then $q$ | TFTT |
+    | 6 | Bi-conditionals | $p \leftrightarrow q$ | $p$ if and only if $q$ (XNOR) | TFFT | 
+
+    > *Why implication | ..T. |?* The statement can still hold true even if $F \rightarrow T$:
+    Consider: "Bob goes to work, it's Monday." The day can still be Monday even if bob doesn't go to work.
+
+    > *Presedence:* $p \rightarrow q \land r \lor s \equiv p\rightarrow ((q \land r)\lor s)$
+    
+    For an implication $p \rightarrow q$:
+
+    - **Converse**: $q \rightarrow p$
+    - **Inverse**: $\neg p \rightarrow \neg q$
+    - **Contrapositive**: $\neg q \rightarrow \neg p$ *(Same truth value as the original)*
+
+## Logic Equivalences
+
+!!! info "Tautology"
+
+    Proposition that is always true, regardless of the truth values of the propositions it contains.
+
+    !!! eg "Examples"
+        - $p \lor \neg p$ is always true
+        - $p \rightarrow p$ is always true
+
+!!! info "Contradiction"
+
+    Proposition that is always false.
+
+    !!! eg "Examples"
+        - $p \land \neg p$ is always false
+
+!!! info "Logical Equivalence "
+
+    If $p \leftrightarrow q$ is a tautology, then $p$ and $q$ are logically equivalent, denoted as $p \equiv q$.
+
+    !!! eg "Examples"
+        - $p \land q \equiv q \land p$
+        - $p \lor q \equiv q \lor p$
+
+The following are the methods & laws of propositional logic:
+
+!!! tip "Laws" 
+
+    | Category | Rule |
+    | --- | --- |
+    | Identity | $p \land \mathbf{T} \equiv p$ <br/> $p \lor \mathbf{F} \equiv p$ |
+    | Domination | $p \lor \mathbf{T} \equiv \mathbf{T}$ <br/> $p \land \mathbf{F} \equiv \mathbf{F}$ |
+    | Idempotent | $p \lor p \equiv p$ <br/> $p \land p \equiv p$ |
+    | Negation | $p \lor \neg p \equiv \mathbf{T}$ <br/> $p \land \neg p \equiv \mathbf{F}$ |
+    | Commutative | $p \lor q \equiv q \lor p$ <br/> $p \land q \equiv q \land p$ |
+    | Associative | $(p \lor q) \lor r \equiv p \lor (q \lor r)$ <br/> $(p \land q) \land r \equiv p \land (q \land r)$ |
+    | Double Negation | $\neg \neg p \equiv p$ |
+    | Bi-Implication | $p \leftrightarrow q \equiv (p \rightarrow q) \land (q \rightarrow p)$ |
+    | Contrapositive | $p \rightarrow q \equiv \neg q \rightarrow \neg p$ |
+    | Implication | $p \rightarrow q \equiv \neg p \lor q$ |
+    | Distributive | $p \land (q \lor r) \equiv (p \land q) \lor (p \land r)$ <br/> $p \lor (q \land r) \equiv (p \lor q) \land (p \lor r)$ |
+    | De Morgan's | $\neg (p \land q) \equiv \neg p \lor \neg q$ <br/> $\neg (p \lor q) \equiv \neg p \land \neg q$ |
+
+
+## Satisfiability
+
+!!! info "Satisfiability"
+
+    Proposition can be made true by some sort of assignment of truth values to its variables, called the **solution**.
+
+    !!! eg "Examples"
+        - $p \land q$ is satisfiable when $p = T, q = T$
+        - $p \land \neg p$ is unsatisfiable

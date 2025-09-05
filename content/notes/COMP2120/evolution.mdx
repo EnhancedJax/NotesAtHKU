@@ -1,0 +1,37 @@
+---
+title: Evolution of computers
+---
+
+!!! note "First modern computer: IAS Machine"
+
+    The IAS machine is the first modern computer, developed by von Neumann.
+
+    It is the first general purpose computer that is **programmable**, utilizing the concept of *stored progras*.
+
+## Milestone in computer architecture
+
+The following technological milestones improve the typical _operations per second_ of a computer:
+
+```math
+\text{Vacuum tubes} \to \text{Transistors} \to \text{Integrated circuits} \to \text{Very Large Scale Integration IC (VLSI)}
+```
+
+!!! info "Moore's Law"
+
+    Moore's Law states that the number of transistors in a dense integrated circuit doubles approximately every two years.
+
+!!! tip "Benchmark performance"
+
+    Measures the $f$ **cycle per second** (Hz), also known as **clock rate**.
+
+    |Operation|Load|Store|Branch|Jump|
+    |---|---|---|---|---|
+    |$CPI$|5|4|3|3|
+
+    Average cycles per instructions: $CPI = \frac{\sum_{i}CPI_{i}\times I_{i}}{\sum_{i}I_{i}},\quad I_i = \text{Instruction count}$
+
+    Processor time: $T=\frac{I_c\times CPI}f$
+
+    Instructions per second: $IPS=\frac{f}{CPI}$
+
+    MFLOPS: Million floating point operations per second

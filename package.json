@@ -12,6 +12,7 @@
     "@giscus/react": "^3.0.0",
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.7",
+    "@theguild/remark-mermaid": "^0.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "fumadocs-core": "14.6.4",

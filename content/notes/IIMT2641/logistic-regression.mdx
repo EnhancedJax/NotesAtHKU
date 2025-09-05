@@ -1,0 +1,136 @@
+---
+title: Logistic Regression
+---
+
+## Introduction
+
+Logistic regression is a statistical method used for binary classification problems, where the outcome variable is categorical and can take on two possible values (e.g., success/failure, yes/no, 1/0). It models the relationship between one or more independent variables and the probability of the dependent variable being in a particular category.
+
+!!! tip "Logistic regression model"
+
+    The outcome of a logistic regression model is $P(Y=1|X)$, which is the probability of the dependent variable being 1 given the independent variables $X$.
+
+    ```math
+    \begin{aligned}
+    \text{Odds} & = \frac{P(Y=1|X)}{P(Y=0|X)} \\
+    \text{Logit} & = \ln\left(\frac{P(Y=1|X)}{P(Y=0|X)}\right) = \beta_0 + \beta_1 X \\
+    P(Y=1|X) & = \frac{1}{1 + e^{-\text{Logit}}}
+    \end{aligned}
+    ```
+
+    For each unit increase in $X$, logit increases by $\beta_1$.
+
+    !!! eg "Example"
+
+        Suppose $\beta_0 = -1.5, \beta_1 = 3, \beta_2 = -0.5$, and we have observations of independent variables $x_1=1,x_2=5$:
+        
+        ```math
+        \begin{aligned}
+        \text{Logit} & = -1.5 + 3(1) - 0.5(5) = -1.5 + 3 - 2.5 = -1\\
+        \text{Odds} & = e^{-1} \\
+        P(Y=1) & = \frac{1}{1 + e^{-(-1)}} = \frac{1}{1 + e}\\
+        \end{aligned}
+        ```
+    
+## Making predictions
+
+!!! info "Threshold"
+
+    The threshold $t$ is a probability at which we classify the outcome as 1 or 0. 
+    * If $P(Y=1|X) \geq t$, we classify the outcome as 1.
+    * If $P(Y=1|X) < t$, we classify the outcome as 0.
+
+!!! tip "Confusion matrix"
+
+    A confusion / classification matrix is a table that summarizes the performance of a classification model by comparing the predicted and actual values.
+    | Actual \ Predicted | 0 | 1 |
+    | :---: | :---: | :---: |
+    | 0 | True Negative (TN) | False Positive (FP) |
+    | 1 | False Negative (FN) | True Positive (TP) |
+    | When $t \Uparrow$ | $\uparrow$ | $\downarrow$ |
+
+    ```math
+    \begin{aligned}
+    \text{Accuracy} & = \frac{TP + TN}{TP + TN + FP + FN} \\
+    \text{TPR True positive rate (sensitivity)} & = \frac{TP}{TP + FN} \propto \frac{1}{t}\\
+    \text{TNR True negative rate (specificity)} & = \frac{TN}{TN + FP} \propto t \\
+    \end{aligned}
+    ```
+
+    Note: If the confusion matrix is about a prediction, the accuracy is the *out-of-sample accuracy*.
+
+!!! info "ROC curve"
+
+    The ROC (Receiver Operating Characteristic) curve is a graphical representation of **TPR-FPR** (*true positive rate* against *false positive rate*) at values of $t$. The plot always starts at $(0,0)$ and ends at $(1,1)$. The point at `(0,0)` holds for `t=1`.
+    
+    The ideal ROC curve is for it to be **close to top left corner** $(0,1)$, which means $\Uparrow TPR, \Downarrow FPR$.
+
+    The area under the ROC curve (**AUC**) is a measure of the model's ability to distinguish between two outcomes, ranges between $0$ to $1$ (perfect classifier). $AUC=0.5$ means the model is no better than random guessing.
+
+## Logistic regression in R-lang
+
+
+Below is an example of performing logistic regression in R:
+
+```r
+Call:
+glm(formula = Bad_air ~ Wind + Temp, family = binomial(link = "logit"), data = data)
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -38.7142    10.7966  -3.586  0.000336 ***
+Wind         -0.5668     0.1833  -3.092  0.001986 ** 
+Temp          0.5140     0.1348   3.813  0.000137 ***
+
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+Null deviance: 134.675  on 115  degrees of freedom
+Residual deviance:  40.502  on 113  degrees of freedom
+(37 observations deleted due to missingness)
+AIC: 46.502
+```
+
+!!! note "Intepreting the estimates"
+
+    The model can be expressed as:
+
+    ```math
+    \text{Logit} = -38.7142 - 0.5668 \text{Wind} + 0.5140 \text{Temp}
+    ```
+    
+    And recall $P(Y=1|X) = \frac{1}{1 + e^{-\text{Logit}}}$, we can compute the probability of `Bad_air` given `Wind` and `Temp`.
+
+!!! note "z-value"
+
+    The z-value is computed as `Estimate / Std. Error`. 
+
+!!! note "p-value"
+
+    The p-value (column `Pr(>|z|)`) is computed as $2(1 - \phi(|z|))$. The value of $\phi$ can be found by referencing the standard normal distribution table.
+
+[Significant codes](linear-regression/#significant-codes) are the same as in linear regression.
+
+---
+
+Showing the [confusion matrix](#confusion-matrix) in R:
+
+```r
+> table(data$Bad_air, predict(model, type = "response") >= 0.5)
+
+  FALSE TRUE
+0   85     0
+1   14    17
+```
+
+The used threshold is $t=0.5$. This means, if given a predicted probability of `Bad_air` as `0.7`, we classify it as `1` (bad air).
+
+The values in the confusion matrix are:
+```
+TP = 17
+TN = 85
+FP = 0
+FN = 14
+```

@@ -1,0 +1,257 @@
+---
+title: Linear Regression
+---
+
+## Single variable linear regression
+
+Linear regression is a statistical method used to model the relationship between a dependent variable and one or more independent variables. 
+
+!!! tip "Dependent and independent variables"
+
+    - **Dependent variable**: The variable we are trying to predict (y)
+    - **Independent variable**: The variable we are using to make predictions (x)
+
+!!! tip "Simple regression model"
+
+    The population model of y with one **independent** variable x is given by:
+
+    ```math
+    y = \beta_0 + \beta_1 x
+    ```
+
+    where:
+    - $\beta_0$ is the y-intercept
+    - $\beta_1$ is the slope
+
+    we can express the model as a regression function:
+
+    ```math
+    E[y|x] = \beta_0 + \beta_1 x
+    ```
+
+    where $E[y|x]$ is the expected value of y given x. From the *straight-line* formula, $\beta_0$ is the y-intercept and $\beta_1$ is the slope of the line.
+
+!!! tip "Estimated regression function"
+
+    Estimates the regression model with n observations $(x_i, y_i)$
+
+    ```math
+    \hat{y} = \hat{\beta_0} + \hat{\beta_1} x
+    ```
+
+    where:
+    - $\hat{\beta_0}$ is the estimated y-intercept
+    - $\hat{\beta_1}$ is the estimated slope
+
+!!! info "Residuals"
+
+    The difference between the observed value of the dependent variable and the predicted value.
+
+    ```math
+    e_i = y_i - \hat{y_i}
+    ```
+
+!!! note "Sum of Squared Errors (SSE)"
+
+    ```math
+    SSE = \sum_{i=1}^{n} (y_i - \hat{y_i})^2
+    ```
+
+!!! note "Total Sum of Squares (SST)"
+
+    ```math
+    SST = \sum_{i=1}^{n} (y_i - \bar{y})^2
+    ```
+
+    where:
+    - $\bar{y}$ is the mean of the dependent variable
+
+!!! tip "Coefficient of Determination (R square)"
+
+    The coefficient of determination $R^2$, ranged from $0\to1$ is gives the **proportion of the variance in y** that is explained by the regression model: 
+
+    ```math
+    R^2 = 1 - \frac{SSE}{SST}
+    ```
+
+    where:
+    - SSR is the sum of squared residuals
+    - SST is the total sum of squares
+
+## Multi-variable linear regression
+
+!!! tip "Multiple regression model"
+
+    The population model of y with k independent variables is given by:
+
+    ```math
+    y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... + \beta_k x_k
+    ```
+
+    where:
+    - $y$ is the dependent variable
+    - $x_1, x_2, ..., x_k$ are the independent variables
+    - $\beta_0$ is the y-intercept
+    - $\beta_1, \beta_2, ..., \beta_k$ are the slopes
+
+!!! note "Multicollinearity"
+
+    We would want IVs to be uncorrelated with each other, but in the real world, they are often **collinear**. If the correlations are too large, then estimated coefficients will be **unreliable**. This is called **multicollinearity**.
+
+!!! info "Variance inflation factors"
+
+    Checks for multicollinearity, of an IV. Use `vif(model)`. If value $< 10$ no problem, else drop variable.
+
+!!! info "Adjusted R square"
+
+    Modified version of $R^2$ that adjusts for the number of IVs. (Produced in `summary(model)`)
+
+## Making predictions
+
+!!! info "In-sample and out-of-sample R square"
+
+    - **In-sample R square**: The proportion of variance explained by the model on the training data.
+    - **Out-of-sample R square**: The proportion of variance explained by the model on the test data. The value can be negative, indicating that the model is worse than a simple mean prediction.
+
+## Linear regression in R-lang
+
+Below is an example of performing linear regression in R:
+
+```r
+Call:
+lm(formula = Air_quality ~ Wind + Temp, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-41.251  -13.695  -2.856   11.390  100.367 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -71.0332    23.5780  -3.013  0.0032 ** 
+Wind          -3.0555     0.6633  -4.607  0.00001 ***
+Temp           1.8402     0.2500   7.362  0.00000 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 21.85 on 113 degrees of freedom
+  (37 observations deleted due to missingness)
+Multiple R-squared:  0.5687,	Adjusted R-squared:  0.5611 
+F-statistic: 74.5 on 2 and 113 DF,  p-value: < 2.2e-16
+```
+
+!!! note "Intepreting the estimates"
+
+    The model can be expressed as:
+
+    ```math
+    \text{Air quality} = -71.0332 - 3.0555 \text{Wind} + 1.8402 \text{Temp}
+    ```
+
+    Hence, for example if `Temp` increases by 2, the `Air_quality` will increase by `1.8402 * 2 = 3.6804`, all else being equal.
+
+!!! note "F-test"
+
+    The F-test is used to test the overall significance of the regression model. It tests whether at least one of the independent variables is significantly related to the dependent variable.
+
+    The null and alt hypothesis of the F-test is :
+
+    ```math
+    H_0: \beta_1 = \beta_2 = 0\\
+    H_1: \exists i \in \{1,2\} \to \beta_i \neq 0
+    ```
+
+    As the `p-value` is less than `0.05`, we reject the null hypothesis, and conclude that at least one of the independent variables is significant.
+
+!!! note "Multiple R-squared"
+
+    The proportion of variation explained by the model, as a percentage.
+
+!!! note "t-value"
+
+    The t-value is computed as `Estimate / Std. Error`. 
+
+!!! note "p-value"
+
+    The p-value (column `Pr(>|t|)`) is computed as $2(1 - P(T>|t|))$. The value of $P$ can be found by referencing the t-distribution table.
+
+!!! note "Significant codes"
+
+    The signficant code is computed by comparing the p-value (`Pr(>|t|)`), and checking if it is **less than** the following values:
+
+    - `***`: 0.001
+    - `**`: 0.01
+    - $\ldots$ `*`: 0.05 `.`: 0.1 ` `: 1
+
+### Other functions
+
+!!! note "Dimension of data"
+
+    ```r
+    > dim(data)
+    [1] 151  3
+    ```
+
+    `rows columns`. The number of rows is the number of observations, and the number of columns is the number of variables.
+
+## Difference in differences
+
+Correlation does not mean causation. We use DiD to estimate the **casual effect** (causation) from a **treatment** (intervention).
+
+!!! tip "DiD"
+    The DiD estimator is calculated as:
+
+    ```math
+    DiD = \Delta {T} - \Delta {C}
+    ```
+
+    T is the treatment group and C is the control group. 
+
+    !!! eg "Example"
+
+        The treatment group is the group that receives the treatment, and the control group is the group that does not receive the treatment.
+
+        | | Time Period      | Control Group (Sales) [C] | Treated Group (Sales) [T] |
+        | --- | --- | --- | --- |
+        | Before implementation | Year 1  | 1500 | 1400 | 
+        | After implementation  | Year 2 | 990  | 1000 | 
+        | Change [$\Delta$] | | -510 | -400 |
+
+        Compute DiD: $DiD = \Delta T - \Delta C -400 - (-510) = 110$
+
+!!! tip "DiD by linear regression"
+
+    Using linear regression:
+
+    ```math
+    y = \beta_0 + \beta_1 T + \beta_2 P + \beta_3 (T * P)
+    ```
+
+    where:
+    - $T$ is the treatment group (1 if treated, 0 if not)
+    - $P$ is the post-treatment period (1 if post, 0 if pre)
+    - $T * P$ is the interaction term (1 if treated AND post, 0 otherwise)
+
+    - $\beta_0 = E[y | T=0, P=0]$ (control group pre-treatment)
+    - $\beta_1 = E[y | T=1, P=0] - E[y | T=0, P=0]$ (treatment group pre-treatment)
+    - $\beta_2 = E[y | T=0, P=1] - E[y | T=0, P=0]$ (control group post-treatment)
+    - $\beta_3 = E[y | T=1, P=1] - E[y | T=0, P=1] - E[y | T=1, P=0] + E[y | T=0, P=0]$ (DiD)
+
+    !!! eg "Example"
+    
+        | | Time Period      | Control Group (Sales) [C] | Treated Group (Sales) [T] |
+        | --- | --- | --- | --- |
+        | Before implementation | Year 1  | 1500 | 1400 | 
+        | After implementation  | Year 2 | 990  | 1000 | 
+        | Change [$\Delta$] | | -510 | -400 |
+
+        The regression model coefficents are:
+        * $\beta_0 = 1500$
+        * $\beta_1 = 1400 - 1500 = -100$ (treatment group pre-treatment)
+        * $\beta_2 = 990 - 1500 = -510$ (control group post-treatment)
+        * $\beta_3 = 1000 - 990 - (-100) + 1500 = 110$ (DiD)
+        
+!!! info "Requirements for DiDs"
+
+    1. Both "pre" and "post" periods must be observed for both treatment and control groups.
+    2. Must have control and treated group, where the control should exhibit **parallel trend** before treatment

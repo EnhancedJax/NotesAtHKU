@@ -1,0 +1,147 @@
+/* Common styles for all admonitions */
+* {
+  font-family: Atkinson Hyperlegible;
+}
+
+.markdown-body .admonition {
+  margin-bottom: 1em;
+  margin-top: 1em;
+  position: relative;
+  padding: 1em;
+  border-radius: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  display: block;
+  padding: 0.25rem 0.75rem;
+  width: min-content;
+  text-wrap: nowrap;
+  color: white;
+  margin-left: -1em;
+  margin-top: -1em;
+  background-color: #888889;
+}
+
+.markdown-body .admonition.light .admonition-title {
+  background-color: #a0a0a0;
+}
+
+/* Unknown MkDocs displayed as info, unknown Docusaurus are not matched */
+.markdown-body .admonition-title::before {
+  content: "";
+}
+.markdown-body .admonition {
+  background-color: #474748;
+  border-bottom: 1px solid #888889;
+  border-left: 8px solid #888889 !important;
+}
+.markdown-body .admonition.light {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #a0a0a0;
+  border-left: 8px solid #a0a0a0 !important;
+}
+
+/* Remove icons for admonition titles */
+.markdown-body .note .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .tip .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .info .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .warning .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .danger .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .abstract .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .success .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .question .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .failure .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .bug .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .example .admonition-title::before {
+  content: "";
+}
+
+.markdown-body .quote .admonition-title::before {
+  content: "";
+}
+
+/* Background and border colors for dark theme */
+.markdown-body .note {
+  background-color: #474748;
+  border-bottom: 1px solid #888889;
+  border-left: 8px solid #888889 !important;
+}
+.markdown-body .note .admonition-title {
+  background-color: #888889;
+}
+
+.markdown-body .tip {
+  background-color: #003100;
+  border-bottom: 1px solid #009400;
+  border-left: 8px solid #009400 !important;
+}
+.markdown-body .tip > .admonition-title {
+  background-color: #009400;
+}
+
+.markdown-body .info {
+  background-color: oklch(0.359 0.144 278.697);
+  border-bottom: 1px solid oklch(0.257 0.09 281.288);
+  border-left: 8px solid oklch(0.257 0.09 281.288) !important;
+}
+.markdown-body .info > .admonition-title {
+  background-color: oklch(0.257 0.09 281.288);
+}
+
+/* Background and border colors for light theme */
+.markdown-body .note.light {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #a0a0a0;
+  border-left: 8px solid #a0a0a0 !important;
+}
+.markdown-body .note.light > .admonition-title {
+  background-color: #a0a0a0;
+}
+.markdown-body .tip.light {
+  background-color: #e0f2e0;
+  border-bottom: 1px solid #008000;
+  border-left: 8px solid #008000 !important;
+}
+.markdown-body .tip.light > .admonition-title {
+  background-color: #008000;
+}
+
+.markdown-body .info.light {
+  background-color: oklch(0.93 0.034 272.788);
+  border-bottom: 1px solid oklch(0.511 0.262 276.966);
+  border-left: 8px solid oklch(0.511 0.262 276.966) !important;
+}
+.markdown-body .info.light > .admonition-title {
+  background-color: oklch(0.511 0.262 276.966);
+}

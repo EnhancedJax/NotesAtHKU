@@ -6,8 +6,12 @@
   font-size: 16px;
 }
 
+.katex {
+  font-size: 1em !important;
+}
+
 .katex-display > .katex {
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
 }
 
@@ -38,10 +42,6 @@ article {
   th {
     background-color: hsl(var(--muted) / 0.4) !important;
   }
-}
-
-#radix-\:r0\: > div.mt-auto.flex.flex-col.border-t.p-3 > div {
-  flex-wrap: wrap;
 }
 
 @layer base {
@@ -141,11 +141,9 @@ details summary::-webkit-details-marker {
   display: none;
 }
 
-/* @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-} */
+/* invert images in dark mode */
+
+.dark img,
+.dark picture {
+  filter: invert(1) hue-rotate(180deg);
+}

@@ -16,20 +16,20 @@ const ADMONITION_MAPPING = {
 
 const STYLES = {
   primary: {
-    body: "bg-green-50 dark:bg-green-800 border-green-600 dark:border-green-900",
-    head: "bg-green-100 dark:bg-green-800 border-green-600",
+    body: "bg-green-50 dark:bg-green-800 border-r-green-200 border-b-green-200 border-l-green-600 dark:border-l-green-800",
+    head: "bg-green-600 dark:bg-green-800",
   },
   secondary: {
-    body: "bg-indigo-50 dark:bg-indigo-800 border-indigo-600 dark:border-indigo-900",
-    head: "bg-indigo-100 dark:bg-indigo-800 border-indigo-600",
+    body: "bg-indigo-50 dark:bg-indigo-800 border-r-indigo-200 border-b-indigo-200 border-l-indigo-600 dark:border-indigo-800",
+    head: "bg-indigo-600 dark:bg-indigo-800",
   },
   knowledge: {
-    body: "bg-slate-100 dark:bg-slate-800 border-slate-600 dark:border-slate-700",
-    head: "bg-slate-100 dark:bg-slate-700 border-slate-600",
+    body: "bg-slate-50 dark:bg-slate-800 border-r-slate-200 border-b-slate-200 border-l-slate-600 dark:border-slate-800",
+    head: "bg-slate-600 dark:bg-slate-800",
   },
   example: {
-    body: "bg-gray-50 dark:bg-gray-800 border-gray-50 dark:border-gray-800",
-    head: "bg-gray-50 dark:bg-gray-800 border-gray-50",
+    body: "bg-gray-50 dark:bg-gray-800 border-r-gray-200 border-b-gray-200 border-l-gray-600 dark:border-gray-800",
+    head: "bg-gray-600 dark:bg-gray-800",
   },
 };
 
@@ -55,19 +55,22 @@ export default function Block({
 
   return (
     <div
-      className={`rounded-xl px-4 relative pt-1 mt-8 mb-6 ${STYLES[activeVariant].body} border-2 dark:bg-opacity-50`}
+      className={`relative mt-8 mb-6 ${STYLES[activeVariant].body} border-b border-r dark:border-b-0 dark:border-r-0 border-l-4 dark:bg-opacity-50`}
     >
       <div
-        className={`${STYLES[activeVariant].head} -top-3 flex absolute items-center w-fit max-w-[calc(100%-1.5rem)] px-3 left-3 right-3 rounded-lg border-2 dark:border-none dark:py-[2px] dark:-translate-y-[2px] overflow-x-auto whitespace-nowrap`}
+        className={`${STYLES[activeVariant].head} flex items-center w-fit max-w-full px-2 py-1 overflow-x-auto whitespace-nowrap`}
       >
-        <h4 className="w-full m-0 mr-2 text-base font-bold" id={href_id}>
+        <h4
+          className="w-full m-0 mr-2 text-base font-bold text-white "
+          id={href_id}
+        >
           {title}
         </h4>
         <NextLink href={`#${href_id}`}>
-          <Link size={16} className="opacity-50" />
+          <Link size={16} className="text-white opacity-50" />
         </NextLink>
       </div>
-      {children}
+      <div className="px-3 pb-1 -mt-2">{children}</div>
     </div>
   );
 }

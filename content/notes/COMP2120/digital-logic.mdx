@@ -1,0 +1,106 @@
+---
+title: Digital logic
+---
+
+## Boolean algebra
+
+### Basics
+
+| A   | B   | NOT            | AND   | OR    | XOR          | NAND            | NOR              | XNOR                    |
+| --- | --- | -------------- | ----- | ----- | ------------ | --------------- | ---------------- | ----------------------- |
+|     |     | $\overline{A}$ | $AB$  | $A+B$ | $A \oplus B$ | $\overline{AB}$ | $\overline{A+B}$ | $\overline{A \oplus B}$ |
+| 0   | 0   | 1              | 0     | 0     | 0            | 1               | 1                | 1                       |
+| 0   | 1   | 1              | 0     | 1     | 1            | 1               | 0                | 0                       |
+| 1   | 0   | 0              | 0     | 1     | 1            | 1               | 0                | 0                       |
+| 1   | 1   | 0              | 1     | 1     | 0            | 0               | 0                | 1                       |
+|     |     | Dot            | Point | Round |              |                 |                  |                         |
+
+## Laws
+
+| Law                 | Expression                                           |
+| ------------------- | ---------------------------------------------------- |
+| Identity Law        | $A + 0 = A$                                          |
+|                     | $A \cdot 1 = A$                                      |
+| Null Law            | $A + 1 = 1$                                          |
+|                     | $A \cdot 0 = 0$                                      |
+| Idempotent Law      | $A + A = A$                                          |
+|                     | $A \cdot A = A$                                      |
+| Complement Law      | $A + \overline{A} = 1$                               |
+|                     | $A \cdot \overline{A} = 0$                           |
+| Commutative Law     | $A + B = B + A$                                      |
+|                     | $A \cdot B = B \cdot A$                              |
+| Associative Law     | $A + (B + C) = (A + B) + C$                          |
+|                     | $A \cdot (B \cdot C) = (A \cdot B) \cdot C$          |
+| Distributive Law    | $A \cdot (B + C) = (A \cdot B) + (A \cdot C)$        |
+|                     | $A + (B \cdot C) = (A + B) \cdot (A + C)$            |
+| Absorption Law      | $A + (A \cdot B) = A$                                |
+|                     | $A \cdot (A + B) = A$                                |
+| De Morgan's Theorem | $\overline{A + B} = \overline{A} \cdot \overline{B}$ |
+|                     | $\overline{A \cdot B} = \overline{A} + \overline{B}$ |
+
+## Implementation of boolean function
+
+We can implement any boolean function using either SOP or POS form.
+
+We should use the **SOP** form if the function is mostly 1s, and **POS** form if the function is mostly 0s.
+
+!!! tip "Sum of Products (SOP)"
+
+    Express boolean function as OR of AND terms.
+
+    !!! eg "Convert truth table to boolean expression"
+
+        | a | b | c | P |
+        |---|---|---|---|
+        | 0 | 0 | 0 | 0 |
+        | 0 | 0 | 1 | 1 |
+        | 0 | 1 | 0 | 1 |
+        | 0 | 1 | 1 | 0 |
+        | 1 | 0 | 0 | 1 |
+        | 1 | 0 | 1 | 1 |
+        | 1 | 1 | 0 | 0 |
+        | 1 | 1 | 1 | 1 |
+
+        ```math
+        \begin{align*}
+            P(a, b, c) &= \overline{a}\overline{b}c + \overline{a}b\overline{c} + a\overline{b}\overline{c} + a\overline{b}c + abc\\
+            & = \overline{a}\overline{b}c + \overline{a}b\overline{c} + a\overline{b}(\overline{c}+c) + abc\\
+            & = \overline{a}\overline{b}c + \overline{a}b\overline{c} + a\overline{b} + abc\\
+        \end{align*}
+        ```
+
+!!! tip "Product of Sums (POS)"
+
+    Express boolean function as AND of OR terms.
+
+    !!! eg "Convert truth table to boolean expression"
+
+        | a | b | c | P |
+        |---|---|---|---|
+        | 0 | 0 | 0 | 0 |
+        | 0 | 0 | 1 | 1 |
+        | 0 | 1 | 0 | 1 |
+        | 0 | 1 | 1 | 0 |
+        | 1 | 0 | 0 | 1 |
+        | 1 | 0 | 1 | 1 |
+        | 1 | 1 | 0 | 0 |
+        | 1 | 1 | 1 | 1 |
+
+        ```math
+        \begin{align*}
+            P(a, b, c) &=  (a + b + c)(a + \overline{b} + \overline{c})(\overline{a} + \overline{b} + c)(\overline{a} + \overline{b} + \overline{c})\\
+        \end{align*}
+        ```
+
+!!! info "Karmaugh Map"
+
+!!! info "Half adder"
+
+    Circuit that adds two bits and produces a sum and carry output.
+
+    | A   | B   | Sum ($A \oplus B$) | Carry ($AB$) |
+    | --- | --- | --- | ----- |
+    | 0   | 0   | 0   | 0     |
+    | 0   | 1   | 1   | 0     |
+    | 1   | 0   | 1   | 0     |
+    | 1   | 1   | 0   | 1     |

@@ -1,0 +1,345 @@
+---
+title: Memory
+---
+
+## Memory hierarchy
+
+Memory comes with varying attributes. Our goal is to achieve balance on **capacity**, **cost**, **access time**, and **access frequency**. The memory hierarchy is a way to organize memory in a computer system to optimize these attributes.
+
+!!! tip "Memory hierarchy"
+
+    | Type of memory | Usage | Category |
+    |---|---|---|
+    | Registers | Instructions | Inbound memory |
+    | On-chip cache | Inside CPU | Inbound memory |
+    | Cache memory | Motherboard | Inbound memory |
+    | Main memory | RAM | Inbound memory |
+    | Secondary storage | Hard disk, SSD | Outbound / Off-line storage |
+
+    Going from top of bottom, the memory hierarchy has the following trends:
+
+    - Capacity $\downarrow$
+    - Cost $\downarrow$
+    - Access time $\uparrow$
+    - Access frequency $\uparrow$
+
+!!! info "Principle of locality"
+
+    Programs do not access all memory locations uniformly. Some memory locations have higher tendency to be accessed than others.
+
+!!! info "Types of locality"
+
+    There are two types of locality:
+
+    - **Temporal locality**: If a memory location is accessed, it is likely to be accessed again in the near future.
+
+    - **Spatial locality**: If a memory location is accessed, it is likely that nearby memory locations will be accessed in the near future.
+
+    !!! eg "Example of locality"
+
+        Consider the following program:
+
+        ```py
+        for x in arr:
+            s += x
+        ```
+
+        The memory at `s` is accessed in every loop (temporal), while each element in `arr` is accessed sequentially (spatial).
+
+!!! info "Memory organization"
+
+    Assuming memory stores in units of 8 bits (1 byte), multi-byte data is stored differently in memory on different architectures.
+
+    - **Big endian**: Stored from most to least signficant byte (left to right).
+    - **Little endian**: Stored from least to most signficant byte (right to left).
+
+    !!! eg "Example storage"
+
+        To store `0x11223344` in memory:
+        - Big endian: `0x11 0x22 0x33 0x44`
+        - Little endian: `0x44 0x33 0x22 0x11`
+
+!!! note "Unit of transfer"
+
+    In modern days, CPU reads from **cache memory**. CPU reads **word by word, and data is transferred in **blocks** (usually 4 KB), containing multiple words.
+
+!!! note "Access methods"
+
+    | Access method | Data accessed by |
+    |---|---|
+    | Sequential | Beginning to end |
+    | Random | In any order. Has constant latency |
+    | Associative | Data is accessed by content, not by address. Used in cache memory & *Content-Addressable Memory* (CAM) |
+
+## Internal memory
+
+!!! note "Volatility"
+
+    Volatile memory **loses** its contents when power is turned off.
+
+!!! info "Comparison of internal memory types"
+
+    The following table compares the different types of internal memory:
+
+    <table>
+        <thead>
+            <tr>
+                <th>Memory Type</th>
+                <th>Category</th>
+                <th>Erasure</th>
+                <th>Write Mechanism</th>
+                <th>Volatility</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>RAM</td>
+                <td>Read-write</td>
+                <td>Electrically, byte-level</td>
+                <td>Electrically</td>
+                <td>Volatile</td>
+            </tr>
+            <tr>
+                <td>ROM</td>
+                <td rowSpan="2">Read-only</td>
+                <td rowSpan="2">Not possible</td>
+                <td>Masks</td>
+                <td rowSpan="5">Nonvolatile</td>
+            </tr>
+            <tr>
+                <td>PROM</td>
+                <td rowSpan="4">Electrically</td>
+            </tr>
+            <tr>
+                <td>EPROM</td>
+                <td rowSpan="3">Read-mostly</td>
+                <td>UV light, chip-level</td>
+            </tr>
+            <tr>
+                <td>EEPROM</td>
+                <td>Electrically, byte-level</td>
+            </tr>
+            <tr>
+                <td>Flash</td>
+                <td>Electrically, block-level</td>
+            </tr>
+        </tbody>
+    </table>
+
+    Flash memory is primarily used for USB drives and SSD. They have faster write times than EEPROM, but limited number of write cycles.
+
+!!! info "Types of RAM"
+
+    | Characteristic | Dynamic RAM | Static RAM |
+    |---|---|---|
+    | Storage Technology | Use transistors to store electric charges. | Use logic gates (latches). |
+    | Refreshing | Required (every few ms due to leaking charge) | Not required |
+    | Speed | Slower (delay due to capacitance) | Faster |
+    | Usage | Main memory | Cache memory |
+    | Cost | Cheap | Very expensive |
+
+!!! info "Memory performance benchmarking"
+
+    We are interested in the following key metrics:
+
+    1. **Access time**: Time to read/write data
+    2. **Transfer time**: Time to transfer data
+    3. **Memory cycle time**: Access + Transfer time
+
+!!! note "Error Detection and Correction"
+
+    Errors may arise from various sources such as spike in voltage (lightning), electromagnetic interference (cosmic ray), power supply problems, etc. 
+    
+    Extra bits are required to detect errors. (Usually in secondary storage devices but not in main memory as it is volatile and less likely to have errors.)
+
+    Common error detection and correction methods include:
+    
+    * Parity Bit: Extra bit added to data to make number of 1s even/odd. (Only detection of odd number of errors, no correctionCannot be used to correct errors. )
+    * Hamming Code
+    * Repetition Code
+
+## Cache memory
+
+Cache memory is hidden software and managed by hardware. It stores copies of frequently accessed data to speed up future access to them.
+
+!!! note "Cache memory organization"
+
+    Consider the word-addressing main memory, with each address of length $n$ bits. By organizing the memory into **blocks** (groups) of $K$ words, we have a total of $M=\frac{2^n}K$ blocks.
+
+    Generally, caches will container $m << M$ **lines** (groups) of the $M$ blocks.
+
+    On each cache line, it contains a tag (identifier) and a word. 
+
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ width: "48%" }}>
+            <table style={{ textAlign: "center", width: "100%" }}>
+                <caption><strong>Main memory</strong></caption>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th colSpan="4">Block</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>2<sup>n</sup>/k</td>
+                        <td>⋯</td>
+                        <td>2<sup>n</sup> - 2<sup>n</sup>/k</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2<sup>n</sup>/K + 1</td>
+                        <td>⋯</td>
+                        <td>2<sup>n</sup> - 2<sup>n</sup>/k + 1</td>
+                    </tr>
+                    <tr>
+                        <td>⋮</td>
+                        <td>⋮</td>
+                        <td>⋱</td>
+                        <td>⋮</td>
+                    </tr>
+                    <tr>
+                        <td>2<sup>n</sup>/k - 1</td>
+                        <td>2 × 2<sup>n</sup>/k - 1</td>
+                        <td>⋯</td>
+                        <td>2<sup>n</sup> - 1</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="5" style={{ textAlign: "center" }}>←Block length (k words)→</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style={{ width: "48%" }}>
+            <table style={{ textAlign: "center", width: "100%" }}>
+                <caption><strong>Cache Memory</strong></caption>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th colSpan="4">Word</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>m</td>
+                        <td>⋯</td>
+                        <td>(k-1)·m</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>m + 1</td>
+                        <td>⋯</td>
+                        <td>(k-1)·m + 1</td>
+                    </tr>
+                    <tr>
+                        <td>⋮</td>
+                        <td>⋮</td>
+                        <td>⋱</td>
+                        <td>⋮</td>
+                    </tr>
+                    <tr>
+                        <td>m - 1</td>
+                        <td>2m - 1</td>
+                        <td>⋯</td>
+                        <td>k·m - 1</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="5" style={{ textAlign: "center" }}>←Word length (k words)→</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+!!! tip "Overview of cache access process"
+
+    ```py
+    address = get_address() # get address from CPU
+    value, cache_position = address_mapping(address) # find address in cache
+
+    # Cache hit
+    return value if value is not None
+
+    # Cache miss
+    value = memory[address] # access from main memory
+    replaced_value = replacement_algorithm(value, cache_position) # replace value in cache
+
+    if write_policy == "write-back" and replaced_value is not None:
+        memory[address] = replaced_value # put discarded value back to memory
+    
+    def replacement_algorithm(value, cache_position):
+        if address_mapping == "direct":
+            cache[cache_position] = value
+            return None
+        
+        # associative mapping
+        if cache is not "full":
+            > "append at the end"
+        else:
+            > "use selected algorithm, and return replaced value"
+    ```
+
+!!! tip "Replacement algorithms"
+
+    The following are common replacement algorithms:
+    1. **Random replacement**: Randomly select a block to replace.
+    2. **Least Recently Used (LRU)**: Replace the block that has not been used for the longest time.
+    3. **Least Frequently Used (LFU)**: Replace the block that has been used the least number of times.
+    4. **First In First Out (FIFO)**: Replace the block that has been in the cache the longest.
+
+### Address mapping
+
+Address mapping inteprets the address of a word in memory, and maps it to a cache block.
+
+!!! tip "Interpreting the main memory address"
+
+    The cache memory splits the given memory address into 3 parts:
+
+    ```math
+    \underbrace{[\text{   Tag    }]\underbrace{[\text{   Number    }]}_\text{s bits}\underbrace{[\text{   Offset    }]}_\text{k bits}}_\text{memory size}\\
+    \text{Block size} = K \text{words} = 2^k \text{bytes}\\  
+    ```
+
+    The specific number of bits for *Number* is different for each cache mapping method. 
+
+    Offset is used to identify, from left to right, the index of the word in block.
+
+    | Mapping Type | Value of s | Usage of Number | Usage of Tag | Adv. | Disadv. |
+    |---|---|---|---|---|---|
+    | Direct | $2^s$ = no. of cache lines | Determines cache line directly | Ensures consistency | Fast | Multiple memory block can map to same cache line | 
+    | Full Associative | $s = 0$ | - | Matches across all cache lines **in parallel** | | Heavy processing (parallel) |
+    | Set Associative | $2^s$ = no. of cache sets | Determines cache set | Matches within the set **in parallel** | | |
+
+    For set associative, a **n-way** associative set will divide the cache by $n$, where each set will have $n$ blocks.
+
+    !!! eg "Example set associative"
+
+        Given address in binary: `1100 1001 0001 0010 1111`, cache size: 1024 bytes, block size 128 word, word size 4 bytes. For a two-way set associative mapping, what is the tag, set number and offset?
+
+        Block size $128 \times 4=512$ bytes, so $2^9=2^k \implies k=9$ bits.
+
+        Number of blocks in cache $\frac{1024}{128} = 8$, number of set $\frac{8}{2}=4$, so $2^2=2^s \implies s = 2$ bits.
+
+        The rest is the tag. Therefore, from left to right, tag is `1100 1001 0`, set number `00`, offset `1 0010 1111`
+
+
+### Performance
+
+!!! info "Performance"
+
+    **Cache miss penalty ($C$)**: Time to transfer value from main memory to cache (in nanosecs)
+
+    **Cache hit time ($H$)**: Time to access the cache
+
+    **Cache hit rate ($P(\text{hit})$)**: $\frac{N(\text{hit})}{N(\text{access})} = 1 - \frac{N(\text{miss})}{N(\text{access})}$
+
+    **Average memory access time**: $H + P(\text{miss}) \cdot C$
+
+!!! tip "Unified and split cache"
+
+    1. Split Cache: The cache is divided into instruction cache and data cache. Size for each cache is fixed. No pipeline
+    hazard. The main trend is to use split cache.
+    2. Unified Cache: The cache is used for both instructions and data. Instructions and data are automatically
+    balanced. Has contention problem on parallel and pipeline execution that imposes bottleneck on performance.

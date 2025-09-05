@@ -1,0 +1,112 @@
+---
+title: Functions
+---
+
+## Introduction
+
+!!! tip "Definition of functions"
+
+    For non-empty sets $A$ and $B$, a "function $f$ from $A$ to $B$" is a relation from $A$ to $B$ such that for each $a \in A$, there is exactly one $b \in B$ such that $(a, b) \in f$. 
+    
+    We write $f: A \to B$ to denote that $f$ is a function from $A$ to $B$.
+
+!!! info "Terminologies"
+
+    For $f: A \to B, \quad f(a) = b$:
+
+    - **Domain**: $A$
+    - **Codomain**: $B$
+    - $b$ is the **image** of $a$ under $f$
+    - $a$ is a **preimage** of $b$ under $f$
+    - The **Range** is the specific set of codomains that were assigned. It is always a **subset** of the codomain.
+
+    - $f: A \to \mathbb{R}$ is a **real-valued function**
+    - $f: A \to \mathbb{Z}$ is an **integer-valued function**
+
+!!! tip "Combining functions"
+
+    Combination of functions by addition or multiplication retain the same domain and codomain, i.e. $f_1,f_2: A \to B \implies (f_1 + f_2), (f_1 \cdot f_2): A \to B$
+
+!!! note "Functions of a Subset"
+
+    For $f: A\to B, \quad S \subseteq A$, the **image of S under f** is:
+
+    ```math
+    f(S) = \{y\ |\ \exists x \in S, f(x) = y\}
+    ```
+
+!!! note "Characteristics of functions"
+
+    | Characteristic | Definition | 
+    | --- | --- | 
+    | Injection / One-to-one | $f: \mathbb{R},\quad f(x_1) = f(x_2) \to x_1 = x_2$ |
+    | Surjection / Onto | $\forall y \exists x : f(x)=y$ | 
+    | Bijection / One-to-one Correspondence | Both one-to-one and onto | 
+    | Total | $\forall x \in A \exists y \in B : f(x)=y$ |
+    | Partial | Not total |
+
+!!! tip "Inverse functions"
+
+    The inverse function $f^{-1}$ will inverse the mapping: $f(a)=b\to f^{-1}(b) = a$.
+
+    Only **Bijection** function can have an inverse function.
+
+!!! note "Composition of functions"
+
+    The composition of functions $f(g(x))$ can be written as $(f \circ g)(x)$. The order is important.
+
+    The composition of function and its inverse will produce the input: $(f \circ f^{-1})(x) = (f^{-1}\circ f)(x) = x$
+
+## Special functions
+
+!!! note "Ceiling and Floor functions"
+
+    - **Ceiling function**: $\lceil x \rceil = \min\{n \in \mathbb{Z}\ |\ n \geq x\}$ (round up)
+    - **Floor function**: $\lfloor x \rfloor = \max\{n \in \mathbb{Z}\ |\ n \leq x\}$ (round down)
+
+!!! note "Other functions"
+
+    You should be familiar with the exponential, logarithmic and factorial functions already.
+
+## Graph of functions
+
+!!! tip "Graph of functions"
+
+    The formal defintion of a graph is:
+
+    ```math
+    \text{Graph}(f) = \{(x, f(x))\ |\ x \in A\} \subseteq A \times B
+    ```
+
+!!! note "Vertical line test"
+
+    A relation is a function if and only if no vertical line intersects the graph at more than one point.
+
+## Growth of functions
+
+Big O notation simplifies a function to its growth rate in respect to the input size.
+
+!!! tip "Definitions of Big Notation"
+
+    ```math
+    T(n) \in A(g(n))\ \text{iff}\ \exists\ c > 0:
+    ```
+    ```math
+    T(n) \simeq c\cdot g(n)\ \forall\ n \geq n_0 > 0
+    ```
+
+    | Notation | Condition | Asymptotic boundary | Name |
+    | --- | --- | --- | --- |
+    | $O(g)$ | $T(n) \leq c\cdot g(n)$ | Upper | Big O |
+    | $\Omega(g)$ | $T(n) \geq c\cdot g(n)$ | Lower | Big Omega |
+    | $\Theta(g)$ | $ c_1\cdot g(n\leq T(n) \leq c_2\cdot g(n)$ | Tight | Big Theta / Order of growth |
+
+!!! note "Identifying growth rates"
+
+    Identify **the term with the highest growth rate** in $T(n)$ would be $g(n)$.
+
+    The following gives the common growth rate functions (increasing order of growth):
+
+    ```math
+    1 < \log n < \sqrt{n} < n < n\log n < n^2 < n^3 < 2^n < n! < n^n
+    ```

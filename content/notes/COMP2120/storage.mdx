@@ -1,0 +1,79 @@
+---
+title: External storage
+---
+
+## Hard disk drives
+
+!!! note "Components"
+
+    * **Platter**: A disk that stores data magnetically.
+    * **Tracle**: A ring on a platter that stores data.
+    * **Sector**: A segment of a track, usually 512 bytes.
+    * **Cylinder**: A set of tracks on different platters that are aligned vertically.
+    * **Read/write head**: A device that reads and writes data on a platter.
+
+!!! note "Sector format"
+
+    * 30 sectors, 600 bytes each, 512 bytes for data, 88 bytes for control information
+    * Sector fields:
+        * **Gap 1** (17b): Separates sectors
+        * **ID Field** (7b): Contains *Synch* (1b), *Track, head, sector* (4b), *CRC* (2b)
+        * **Gap 2** (41b): Separates ID and data field
+        * **Data Field** (515b): Contains *Synch* (1b), *Data* (512b), *CRC* (2b)
+        * **Gap 3** (40b): Separates data and ID field
+
+!!! note "Disk layout methods"
+
+    There are two methods for laying out data on a disk:
+
+    * **Constant Angular Velocity** (CAV): The disk rotates at a constant speed, and the data is read at a constant rate. Easier read/write, but density of data decreases from inner track to outer tracks, wasting space.
+    * **Multiple Zone Recording** (MZR): Divides disk into zones, with each zone having a different number of sectors per track. Data density is nearly constant and allows maximized storage capacity.
+
+!!! tip "Disk Access Time"
+
+    * **Average seek time** $T_\text{seek}$: Time taken to move the read/write head to the desired track.
+    * **Average rotational latency** $T_\text{latency}$: Time required for sector to rotate under the head
+    * **Data transfer time** $T_\text{transfer}$: Time taken to read or write the data once the head is in position.
+    * Time for one rotation $T_\text{rotation}$
+    * TIme to rotate one sector $T_\text{sector}$
+    * Number of sectors per track $n_\text{sectors}$
+
+    Formulas in seconds: 
+
+    ```math
+    \begin{aligned}
+    & \frac{1}{rps} = \frac{60}{RPM} \\
+    & T_\text{rotation} & \frac{1}{rps} \\
+    & T_\text{latency} & \frac12 \times T_\text{rotation} \\
+    & T_\text{sector} & \frac{T_\text{rotation}}{n_\text{sectors}} \\
+    & T_\text{transfer} & \frac{\text{bytes}}{\text{bytes per track}} \times \frac{1}{rps} \\
+    \end{aligned}
+    ```
+
+    Time to access $n$ **consecutive** sectors ignoring transfer speed: $T_\text{seek} + T_\text{latency} + n \times T_\text{sector}$
+
+    Time to access $n$ **non-consecutive** sectors ignoring transfer speed: $(T_\text{seek} + T_\text{latency} + T_\text{sector}) \times n$
+
+## Solid State Drives (SSD)
+
+!!! info "SSD"
+
+    * Non-volatile storage devices
+    * Limited write cycles
+    * Faster I/O, access time than HDDs
+    * No moving parts: Lower power consumption, less heat, no noise, high durability
+
+## Redundant Array of Independent Disks (RAID)
+
+The goal of RAID is to improve performance and reliability of data storage by using multiple disks. 
+
+
+| **RAID Level** | **Data Layout / Parity**                                                                         | **Fault Tolerance**                                   | **Advantages**                                                                                                             | **Disadvantages**                                                            |
+| -------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **0**          | Data is striped (distributed in a round-robin fashion) across disks; no parity                   | None – one disk failure causes total data loss        | Excellent I/O performance; simple design                                                                                   | No redundancy – loss of any disk results in loss of the entire array         |
+| **1**          | Data is mirrored on two disks                                                                    | Can tolerate disk failure as long as one copy remains | 100% redundancy; potentially reduced seek time during read operations                                                      | Requires double the physical writes; highest storage overhead                |
+| **2**          | Data is striped at the bit level with dedicated disks for Error Correction Codes (Hamming codes) | Error correction possible, but requires extra disks   | High data transfer rate (especially with smaller strip sizes); simpler ECC controller design compared to later RAID levels | Expensive; high ECC disk-to-data disk ratio; not used commercially           |
+| **3**          | Data is striped at the bit level; one dedicated disk stores parity bits                          | Recovers from a single disk failure                   | Very high read/write speeds; efficient use of ECC for fault recovery                                                       | Dedicated parity disk can become a bottleneck                                |
+| **4**          | Data is striped at the block level with a dedicated parity disk                                  | Recovers from a single disk failure                   | Allows individual spindle control; similar benefits as RAID 3                                                              | Write penalty (requiring extra read/write cycles to update parity); uncommon |
+| **5**          | Data and parity are distributed across all disks; parity is calculated on a block basis          | Can endure one disk failure                           | High I/O performance; distributed parity avoids single-disk bottlenecks; widely used                                       | More complex parity recalculation; rebuild process can be challenging        |
+| **6**          | Similar to RAID 5 but with dual distributed parity (using two different parity methods)          | Tolerates up to two disk failures                     | Highest fault tolerance; enhanced data reliability                                                                         | Higher controller complexity and parity computation overhead                 |

@@ -1,0 +1,15 @@
+{
+  "markdown.styles": ["./.vscode/dev-md-preview.css"],
+  "workbench.colorCustomizations": {
+    "commandCenter.border": "#e7e7e799",
+    "titleBar.activeBackground": "#793600",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#79360099",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#793600",
+  "editor.fontSize": 18,
+  // "editor.fontFamily": "Arial Black",
+  "editor.lineHeight": 1.5,
+  "markdown.preview.fontSize": 16
+}

@@ -1,0 +1,190 @@
+---
+title: Probabilities
+---
+
+## Definitions
+
+!!! note "Complement"
+
+    The complement of an event $A$ is denoted by $A^c$ and is defined as the event that $A$ does not occur.
+
+    $P(A^c) = 1 - P(A)$
+
+!!! tip "Mutually exclusive"
+
+    Two events $A$ and $B$ are said to be *mutually exclusive* if they cannot occur at the same time.
+
+    $P(A \cap B) = 0$
+
+    !!! eg "Example"
+
+        For example, when tossing a coin, the events "heads" and "tails" are mutually exclusive.
+
+!!! note "Union"
+
+    The union of two events $A$ and $B$ is denoted by $A \cup B$ and is defined as the event that at least one of the events occurs.
+
+    The probability of the union of two events is given by:
+
+    $P(A \cup B) = P(A) + P(B) - P(A \cap B)$
+
+    Which is given by the general formula via [inclusion-exclusion principle](counting#subtraction-rule):
+
+    ```math
+    p(\cup_{i=1}^n A_i) = \sum_{i=1}^n P(A_i) - \sum_{1 \leq i < j \leq n} P(A_i \cap A_j) + \sum_{1 \leq i < j < k \leq n} P(A_i \cap A_j \cap A_k) - \cdots + \cdots
+    ```
+
+    For events tha are *mutually exclusive*, the formula simplifies to:
+
+    ```math
+    p(\cup_{i=1}^n A_i) = \sum_{i=1}^n P(A_i)
+    ```
+
+    Which is just the sum of the probabilities of the events.
+
+!!! info "Union bound"
+
+    ```math
+    p(\cup_{i=1}^n A_i) \leq \sum_{i=1}^n P(A_i)
+    ```
+
+    !!! eg "Proof"
+
+        ```math
+        \begin{aligned}
+        \text{Base case: } n=1 \to P(A_1) & \leq P(A_1)\\
+        \text{Inductive step: Assume true for some }& n=k:\\
+        P(\cup_{i=1}^k A_i) & \leq \sum_{i=1}^k P(A_i)\\
+        \text{Then for }n=k+1: P(\cup_{i=1}^{k+1} A_i) & = P(\cup_{i=1}^k A_i \cup A_{k+1})\\
+        (\text{as } P(A\cup B) = P(A) + P(B) - P(A\cup B)) \implies & \leq P(\cup_{i=1}^k A_i) + P(A_{k+1}) - P(\cup_{i=1}^k A_i \cap A_{k+1})\\
+        (\because P(\cup_{i=1}^k A_i \cap A_{k+1}) \geq 0) \implies & \leq P(\cup_{i=1}^k A_i) + P(A_{k+1})\\
+        & \leq \sum_{i=1}^{k} P(A_i) + P(A_{k+1})\\
+        & \leq \sum_{i=1}^{k+1} P(A_i)\\
+
+        \end{aligned}
+        ```
+
+## Conditionals
+
+!!! tip "Conditional probabilities"
+
+    The probability of A given that B occurs: $P(A\ \|\ B) = \frac{P(A\cap B)}{P(B)}$
+
+!!! tip "Exhaustive events"
+
+    A set of events are **exhaustive** if at least one of them would occur in a sample space (the universe of possible outcomes).
+
+    A set of events are **paritions of a sample space** if they are:
+    1. Mutually exclusive
+    2. Collectively exhaustive
+    3. $P(A_i) \neq 0$ for all $i$
+
+!!! info "Law of Total Probability"
+
+    For events $E_1, E_2, \ldots, E_n$ that partition a sample space $S$:
+
+    ```math
+    P(A) = \sum_{i=1}^n P(A|E_i)P(E_i)
+    ```
+
+    !!! eg "Proof"
+
+        Consider probabilities:
+
+        ```math
+        \begin{align*}
+        A & = A \cap S\\
+        & = A \cap (E_1 \cup E_2 \cup \cdots \cup E_n)\\
+        & = (A \cap E_1) \cup (A \cap E_2) \cup \cdots \cup (A \cap E_n)\\
+        \because E_i \cap E_j = \emptyset \text{ for } i \neq j \implies & = (A \cap E_1) + (A \cap E_2) + \cdots + (A \cap E_n)\\
+        \because A|E_i=\frac{A\cap E_i}{E_i} & \\
+        (A|E_i)\times E_i = A \cap E_i \implies & = (A|E_1)\times E_1 + (A|E_2)\times E_2 + \cdots + (A|E_n)\times E_n\\
+        & = \sum_{i=1}^n (A|E_i)\times E_i\\
+        \end{align*}
+        ```
+
+!!! tip "Bayes' Theorem"
+    
+    ```math    
+    \begin{aligned}
+    P(A|B) & = \frac{P(B\ | A) \cdot P(A)}{P(B)}\\
+    & = \frac{P(B|A) \cdot P(A)}{P(B|A)P(A) + P(B|A^c)P(A^c)}\\
+    \end{aligned}
+    ```
+
+    We can generalize the theorem by the [total probability theorem](#law-of-total-probability). Suppose that $A$ is an event from a sample space $S$ that is partitioned by events $E_1, E_2, \ldots, E_n$. For an index of events $E_k$:
+
+    ```math
+    P(E_k | A) = \frac{P(A|E_k)P(E_k)}{\sum_{i=1}^n P(A|E_i)P(E_i)}
+    ```
+
+## Independence
+
+!!! tip "Independent events"
+
+    A and B are said to be *independent* if $P(A) \times P(B) = P(A\cap B)$.
+
+    Being independent means that the probability of an event *has no influence on the other*
+
+!!! info "Pairwise independence"
+
+    For all pairs of events $A$ and $B$ in a set of events, $P(A \cap B) = P(A) \times P(B)$
+
+!!! info "Mutually independent"
+
+    For all events in a set of events, $P(\cap^n_{i=1} A_i) = P(A_1) \times P(A_2) \times \cdots \times P(A_n)$
+
+    By definition, **all events** inside a mutually independent set of events are **pairwise independent**. This might not be true in the reverse: $n$ pairwise independent events might not be mutually independent.
+
+
+## Random variables
+
+!!! note "Notation"
+
+    Random variables are denoted with capital letters $X$
+
+    The possible outcomes are denoted with regular letters $x$
+
+    Probability that the outcome of $X$ is $x$ is denoted by $P(X=x)$
+
+
+!!! tip "Expected value and Variance"
+
+    $E(X^n)=\sum(x^n\cdot P(X=x))$ gives the expected value, which represents the mean value (outcome) of the random variable.
+
+    $Var(X)=E(X^2)-E(X)^2$ gives the variance, which is a measure of the variability of the random variable's outcomes.
+
+
+!!! tip "Operations of E(X) and Var(X)"
+
+    $E(X+Y)=E(X)+E(Y)$, which any addition / subtraction function within $E()$ can be expanded.
+
+    If $X$ and $Y$ are independent:
+
+    $Var(X+Y) = Var(X) + Var(Y),\quad\quad E(XY)    = E(X)\cdot E(Y)$
+
+    $for\ Y=aX+b:$ $E(Y)=aE(X)+b,\quad\quad Var(Y)=a^2Var(X)$
+    
+!!! info "Law of total expectation"
+
+    $E(X) = E(E(X|Y))$
+
+### Binomial distribution
+
+!!! note "Bernoulli trials"
+
+    A Bernoulli trial is an experiment or process that results in a binary outcome: success or failure.
+
+    The probability of success is denoted by $p$ and the probability of failure is denoted by $q = 1 - p$.
+
+!!! tip "Binomial distribution"
+
+    The binomial distribution is a discrete probability distribution that describes the number of successes in a fixed number of independent Bernoulli trials.
+
+    The probability of getting exactly $k$ successes in $n$ trials is given by:
+
+    ```math
+    P(X=k) = \binom{n}{k} p^k q^{n-k}
+    ```
+
+    Where $\binom{n}{k}$ is the binomial coefficient, which represents the number of ways to choose $k$ successes from $n$ trials.
