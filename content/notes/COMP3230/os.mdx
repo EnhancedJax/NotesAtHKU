@@ -1,0 +1,77 @@
+---
+title : Operating System
+---
+
+!!! note "Operating system"
+    
+    A resource manager that manage & coordinate the use of resources amongst users, and it also provides an abstractive view on the computer to user
+
+
+### COre functions 
+
+1. Resource manager
+
+    - Managing resources - CPUs, memory, disk, files ...
+    - Decides between conflicting requests for _efficient_ and _fair use_ of resources
+
+2. **Interface** between applications and hardware
+
+    - Separates applications from the hardware they access
+    - Provides the APIs for programs to ask for OS services 
+
+### Core Services Allow
+
+1. applications to run on the system ( easily, correctly, and effectively )
+
+2. running applications to use memory as well as share the memory
+
+3. running applications to interact with each other
+
+4. applications to access and share data that stored in persistent storage
+
+### Key Components
+
+!!! info "Virtualization" 
+
+    Make each application believe it has each resource to itself
+
+    !!! eg "Example"
+
+        CPU, Memory ...
+        
+!!! info "Concurrency"
+
+    Events are occurring simultaneously and may interact with one another
+
+    As a concurrent program $\rightarrow$ many internal kernel data structures may be updated concurrently by multiple execution logics
+    
+    **Multi-core Systems** and **multi-threaded programs** are common, in order to work correctly, they need to :
+        
+    - carefully access shared data, with the uses of proper synchronization primitives
+
+!!! info "Persistence"
+
+    Access information permanently
+
+    !!! eg "Example"
+
+        File system, hard drive ...
+
+
+!!! note "File management"
+    - **File system** : The OS component responsible for managing storage disks.
+        - Stores user-created data reliably and efficiently.
+        - Provides a uniform, logical view of information storage.
+
+    - **File** : An abstraction of physical storage into a logical unit.
+        - Maps files to physical media.
+        - Provides mechanisms for applications to manage and access files.
+
+!!! info "Design Goals of an OS"
+    1. Ease of Use: Simplifies system interaction through abstraction.
+    2. Protection: Isolates applications from each other and the OS.
+    3. Efficiency: Optimizes resource utilization.
+    4. Hardware Compatibility: Operates on various hardware configurations.
+    5. Reliability: Prevents failures due to isolated application or hardware errors.
+    6. Security: Protects resources from unauthorized access.
+    7. Additional Goals: Energy efficiency, mobility, and more.

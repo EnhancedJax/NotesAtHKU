@@ -1,0 +1,10 @@
+{
+  "title": "COMP3330",
+  "semester": "2025 Fall",
+  "description": "Interactive Mobile Application Design and Programming",
+  "root": true,
+  "icon": "Smartphone",
+  "pages": ["index", 
+    "---Contents---"],
+  "wip": true
+}

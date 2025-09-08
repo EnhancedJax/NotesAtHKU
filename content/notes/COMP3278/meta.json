@@ -1,0 +1,10 @@
+{
+  "title": "COMP3278",
+  "semester": "2025 Fall",
+  "description": "Introduction to database management systems",
+  "root": true,
+  "icon": "Database",
+  "pages": ["index", 
+    "---Contents---"],
+  "wip": true
+}

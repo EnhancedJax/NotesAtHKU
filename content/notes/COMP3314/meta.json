@@ -1,0 +1,13 @@
+{
+  "title": "COMP3314",
+  "semester": "2025 Fall",
+  "description": "Introduction to Machine Learning",
+  "root": true,
+  "icon": "Bot",
+  "pages": [
+    "index", 
+    "---Contents---",
+    "clustering"
+  ],
+  "wip": true
+}
