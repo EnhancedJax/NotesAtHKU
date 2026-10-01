@@ -1,0 +1,41 @@
+---
+title: Indexes
+---
+
+!!! note "Motivation"
+
+!!! tip "Primary & secondary indicies"
+
+## B+ trees
+
+### Structure
+
+"Holds maximum of $k$ keys": create B+ tree with order $m=k+1$.
+
+Each node holds $\lceil (k)/2 \rceil$ to $k$ children, except for the root node.
+
+* All data are stored in the leaf nodes (tree is always **balanced**), which are linked together to form a linked list.
+* The search time is always $O(\log n)$, where $n$ is the number of keys in the tree.
+
+* Traversal: To search for a key, we start at the root node and traverse down the tree, following the appropriate child pointers based on the key values until we reach a leaf node. The leaf node is then searched for the desired key.
+* Insertion: When inserting a new key, the tree is traversed from the root to the appropriate leaf node. If the leaf node is full (**overflow**), it is split into two nodes, and the middle key (right of divider) is promoted to the parent node.
+* Deletion: When deleting a key, the tree is traversed from the root to the appropriate leaf node. If the leaf node becomes too empty (**underflow**), it is merged with a sibling node, and the parent node is updated accordingly by removing the key that separated the two nodes.
+
+### Observations
+
+TBC...
+
+## Static hashing
+
+!!! tip "Bucket"
+
+    * Contains one or more records.
+    * Records with different search-key values may be mapped to the same bucket; thus entire bucket has to be searched sequentially to locate a record.
+
+**Hash file organization**: Obtain the bucket of a record directly from its search-key value using a **hash function**.
+
+!!! tip "Hash function"
+
+    $h$: a function from set of all possible search-key values to a set of bucket addresses $\{0, 1, \ldots, N-1\}$, where $N$ is the number of buckets in the file.
+
+TBC...

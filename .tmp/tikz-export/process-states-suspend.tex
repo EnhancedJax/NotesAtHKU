@@ -1,0 +1,34 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+        scale=0.8, transform shape,
+        ->, >=stealth, thick,
+        state/.style={draw, rounded corners, align=center,
+                minimum width=2.5cm, minimum height=0.9cm},
+        every node/.style={font=\small}
+    ]
+    \node[state] (new) at (0,-3) {New};
+    \node[state] (ready) at (5,-3) {Ready};
+    \node[state] (running) at (5,0) {Running};
+    \node[state] (blocked) at (10,-3) {Blocked};
+    \node[state] (terminated) at (0,0) {Terminated};
+    \node[state, draw=magenta] (suspendedready) at (10,0) {Suspended Ready};
+    \node[state, draw=magenta] (suspendedblocked) at (15,-3) {Suspended Blocked};
+
+    \draw (new) -- node[above] {} (ready);
+    \draw (ready) to[bend left=68] node[left] {scheduled} (running);
+    \draw (running) -- node[] {} (blocked);
+    \draw (blocked) -- node[below] {event completed} (ready);
+    \draw (running) to[bend left=18] node[left] {descheduled} (ready);
+    \draw (running) -- node[below] {completion} (terminated);
+    \draw[magenta] (ready) to[bend left=18] node[right] {suspend} (suspendedready);
+    \draw[magenta] (running) -- node[above] {suspend} (suspendedready);
+    \draw[magenta] (blocked) to[bend left=18] node[below] {suspend} (suspendedblocked);
+    \draw[magenta] (suspendedready) to[bend left=18] node[left] {resume} (ready);
+    \draw[magenta] (suspendedblocked) to[bend left=18] node[above] {resume} (blocked);
+    \draw[magenta] (suspendedblocked) -- node[right] {event completed} (suspendedready);
+\end{tikzpicture}
+\end{document}

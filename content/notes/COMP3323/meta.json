@@ -5,7 +5,10 @@
     "root": true,
     "icon": "Database",
     "pages": [
-        "index"
+        "index",
+        "storage",
+        "indexes",
+        "spatial"
     ],
     "wip": false
 }

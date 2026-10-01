@@ -5,7 +5,11 @@
     "root": true,
     "icon": "Cpu",
     "pages": [
-        "index"
+        "index",
+        "introduction",
+        "process-abstraction",
+        "virtualization",
+        "scheduling"
     ],
     "wip": false
 }

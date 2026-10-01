@@ -1,0 +1,28 @@
+---
+title: Storage & access
+---
+
+!!! tip "Blocks"
+
+    * **Fixed-length** storage units of both *storage allocation* and *data transfer*
+    * A database file is partitioned into blocks
+    * Typical size: $4Kb-16Kb$
+
+    A database system seeks to *minimize the number of block transfers* between the disk and memory. We can reduce the number of disk accesses by keeping as many blocks as possible in main memory.
+
+!!! tip "Buffer"
+
+    A **pool of blocks** in memory
+
+!!! info "Buffer manager"
+
+    Mechanism:
+
+    1. If the block is already in the buffer, the requesting program is given the address of the block in main memory
+    2. If the block is not in the buffer,
+        1. the buffer manager allocates space in the buffer for the block, replacing (throwing out) some other block, if required, to make space for the new block.
+        2. The block that is thrown out is written back to disk only if it was modified since the most recent time that it was written to/fetched from the disk.
+        3. Once space is allocated in the buffer, the buffer manager reads the block from the disk to the buffer, and passes the address of the block in main memory to requester.
+
+buffer replacment policies,
+file organization,
