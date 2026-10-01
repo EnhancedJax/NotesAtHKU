@@ -1,0 +1,11 @@
+{
+    "title": "COMP3297",
+    "semester": "2026 Fall",
+    "description": "Software Engineering",
+    "root": true,
+    "icon": "Code",
+    "pages": [
+        "index"
+    ],
+    "wip": false
+}

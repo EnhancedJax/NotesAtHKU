@@ -1,0 +1,11 @@
+{
+    "title": "COMP3323",
+    "semester": "2026 Fall",
+    "description": "Advanced Database Systems",
+    "root": true,
+    "icon": "Database",
+    "pages": [
+        "index"
+    ],
+    "wip": false
+}

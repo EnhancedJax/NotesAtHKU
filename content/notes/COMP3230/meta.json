@@ -1,0 +1,11 @@
+{
+    "title": "COMP3230",
+    "semester": "2026 Fall",
+    "description": "Principles of Operating Systems",
+    "root": true,
+    "icon": "Cpu",
+    "pages": [
+        "index"
+    ],
+    "wip": false
+}

@@ -1,0 +1,11 @@
+{
+    "title": "COMP3330",
+    "semester": "2026 Fall",
+    "description": "Mobile Application Development",
+    "root": true,
+    "icon": "Smartphone",
+    "pages": [
+        "index"
+    ],
+    "wip": false
+}
