@@ -22,7 +22,7 @@
     "katex": "^0.16.18",
     "lucide-react": "^0.469.0",
     "motion": "^11.18.2",
-    "next": "15.1.2",
+    "next": "15.1.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-loading-skeleton": "^3.5.0",
