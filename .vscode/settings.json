@@ -5,7 +5,8 @@
     "titleBar.activeBackground": "#793600",
     "titleBar.activeForeground": "#e7e7e7",
     "titleBar.inactiveBackground": "#79360099",
-    "titleBar.inactiveForeground": "#e7e7e799"
+    "titleBar.inactiveForeground": "#e7e7e799",
+    "commandCenter.foreground": "#e7e7e7"
   },
   "peacock.color": "#793600",
   "editor.fontSize": 18,

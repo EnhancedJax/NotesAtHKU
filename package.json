@@ -9,7 +9,7 @@
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
-    "@giscus/react": "^3.0.0",
+    "@giscus/react": "^3.1.0",
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.7",
     "@theguild/remark-mermaid": "^0.3.0",
