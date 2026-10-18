@@ -6,9 +6,11 @@
     "icon": "Database",
     "pages": [
         "index",
-        "storage",
+        "intro",
         "indexes",
-        "spatial"
+        "spatial",
+        "spatialnet",
+        "ranking"
     ],
     "wip": false
 }

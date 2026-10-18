@@ -1,6 +1,35 @@
 ---
-title: Storage & access
+title: Introduction
 ---
+
+## Recap on operations
+
+!!! info "Picking data"
+
+    | Operation | Syntax | Description |
+    |-----------|--------|-------------|
+    | Selection | $\sigma_{\theta}(R)$ | Select rows from R that satisfy condition $\theta$ |
+    | Projection | $\pi_{attr1,attr2...}(R)$ | Select columns from R (ordered) |
+
+!!! info "Basic operators"
+
+    | Operation | Syntax | Description |
+    |-----------|--------|-------------|
+    | Union | $R \cup S$ | Combine rows from R and S, removing duplicates |
+    | Intersection | $R \cap S$ | Rows that are in both R and S |
+    | Set Difference | $R - S$ | Rows in R that are not in S |
+    | Cartesian Product | $R \times S$ | Combine each row of R with each row of S. For same named attributes, refer to them solely by position index. |
+
+
+!!! info "Rename and assignment"
+
+    | Operation | Syntax | Description |
+    |-----------|--------|-------------|
+    | Assignment | $X \gets E$ | Assign expression E to X |
+    | Rename | $\rho(E1, E)$ | Rename expression E to E1 |
+    | Rename | $\rho(attr1 \to newname, E)$ | Rename attribute attr1 in expression E to newname |
+
+## Storage & access
 
 !!! tip "Blocks"
 

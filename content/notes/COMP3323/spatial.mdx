@@ -65,76 +65,153 @@ Point access methods...
 
 TBC...
 
-## R trees
+## R-trees
 
-They're conceptually similar to B+ trees, but for spatial data.
+They're conceptually similar to [B+ trees](indexes/#b-trees), but for spatial data.
 
-!!! tip "R tree"
+!!! tip "R-tree"
 
-    A tree where:
+    Properties:
+    * Leaf nodes: `<MBR, id>`
+    * Non-leaf nodes: `<MBR, ptr>`
+    * Parameters, except for the root node:
+        * Minimum number of entries: $m$
+        * Maximum number of entries: $M$
+        * $m \leq \frac{M}{2}$
+        * Usually $m=0.4M$
+    * MBR of a non-leaf node is the MBR of its children
 
-    * Non-leaf nodes correspond to a MBR that contains all MBRs in its child nodes.
-    * Leaf nodes contain the actual MBRs (or points) of the objects.
-    * Unlike B+ trees, the MBRs of the child nodes of a non-leaf node may overlap. When searching for an object, we may have to traverse multiple paths down the tree.
+    <BlockSep />
 
     ![](../../../public/img/COMP3323/rtree1.png)
 
-!!! tip "R* tree"
+### R*-trees
 
-    R*-trees aim to minimise overlap and dead space, making searches more efficient. Their main design objectives are:
+A R*-tree is an improved version of the R-tree, which uses a different **insertion** strategy to produce a better tree that matches the following criterions:
 
-    1. **Minimise the area of node MBRs:** reduce dead space, lowering the chance that a query intersects an MBR unnecessarily.
-    2. **Minimise overlap between node MBRs:** reduce the number of paths that must be traversed during a search.
-    3. **Minimise margins:** square-like MBRs are generally better for queries than long, narrow ones.
-    4. **Maximise node storage utilisation:** reduce the height of the tree.
+| Criterion | Explaination | 
+|---|---|
+| Small area | Reduce *dead space* where the MBR doesn't contain any object and thus can waste I/O |
+| Small overlap | Reduce *sibling overlap* which when hit means multiple branches need to be searched |
+| Small margin / perimeter | Square MBRs are better than thin ones | 
+| High storage utilization | Fuller nodes mean fewers nodes |
 
-**Choosing a leaf for insertion.** At directory levels, choose the child whose MBR requires the least area enlargement to include the new object. At the leaf level, choose the child whose MBR causes the minimum increase in overlap with its siblings.
+!!! info "R*-tree insertion path"
 
-**Node splitting.** Node splitting occurs when a node overflows:
+    *Insertion*:
+    * At a high-level node, pick the child whose MBR needs the **least enlargement** to include the new object.
+    * When the node's objects are at the leaf level, pick the entry whose enlargement causes the **least overlap** with its siblings. \*
+    * If there is a tie, pick the one with the **least area**.
 
-1. **Determine the split axis.** For both the $x$ and $y$ axes, sort the entries and evaluate different groupings. Choose the axis that minimises the sum of the margins of the two resulting MBRs.
-2. **Choose the split index.** Along the chosen axis, choose the distribution with the minimum overlap.
-3. **Forced reinsertion.** When a node overflows, remove a percentage of the entries farthest from the node's centre and reinsert them into the tree. These are the entries that are likely to produce a better-structured tree when reinserted.
+    \*: More expensive to compute, but overlap matters most at the bottom
 
-!!! info "Bulk-loading"
+!!! info "R*-tree insertion node splitting"
 
-    Bulk-loading is used to build an R-tree from a static dataset more efficiently.
+    *Node splitting*: When insertion causes overflow ($M+1$ entries):
+    * For each *axis*:
+        * Sort objects by lower and upper value
+        * For each sort, try every split point $k \in [m, M+1-m]$
+        * For each $k$, put first $k$ entries in group A and the rest in group B, and compute $sum_k = sum_k + margin(A) + margin(B)$
+    * Choose to split by *axis* with the **least** $sum$
 
-    1. **Native $(x/y)$ sorting:** sort by one coordinate and pack consecutive objects into leaf nodes. This can create ``striped'' MBRs with high overlap.
-    2. **Hilbert sorting:** sort using Hilbert curve values, which can improve the structure of the tree.
-    3. **Sort-Tile-Recursive:** first sort all rectangles by their $x$-coordinate and divide them into vertical slices. Then, for each slice, sort by $y$-coordinate and pack the rectangles into leaf nodes.
+!!! info "R*-tree insertion forced reinsert"
 
-## Spatial joins
+    Before splitting an overflowing node, the R*-tree tries to relieve it instead:
+    * Take **30% of the entries furthest from the node's center** and remove them
+    * Reinsert them from the top of the tree, which may cause them to go into a different node
+    * One-off per overflowed node
 
-### R-tree Join (Synchronized Traversal)
+    It costs a bit mroe per insert, but it gives better overall tree quality and reduces the number of splits.
 
-**Core observation.** If two directory nodes, $n_R$ and $n_S$, have MBRs that do not intersect, then no object in the subtree of $n_R$ can intersect any object in the subtree of $n_S$.
+### Bulk loading R-trees
 
-The algorithm recursively traverses both trees in parallel, then only considers pairs of entries whose MBRs intersect.
+If the dataset is static and known up front, inserting one by one is slow, and it leaves nodes only partly full. Bulk-loading sorts the data and builds the tree bottom-up.
 
-### Optimizations for Pair Comparison
+!!! info "Bulk loading R-tree methods"
 
-Within two nodes, naive nested loops require $O(N\cdot M)$ comparisons. Plane sweep is used to improve this cost and find all intersecting entry pairs:
+    * **x-sorting**: Sort rectangles by the x-coordinate of their center, pack M consecutive ones into each leaf, then build the upper levels the same way. It is fast and the leaves are full, but the leaf MBRs become long vertical stripes.
+    * **Hilbert sorting**: Order rectangles along a space-filling curve, which keeps nearby objects close together in the order. The structure is much better, but overlap is still large.
+    * **Sort-Tile-Recursive (STR)**: Sort by x and cut into vertical slices. Within each slice, sort by y and pack into leaves. The leaves come out roughly square, and this is usually the best bulk-loading method.
 
-1. Sort the entries in both nodes by their $x$-coordinate.
-2. Sweep a vertical line through the space, maintaining a set of active entries.
+## Queries on R-trees
 
-This reduces the number of comparisons. The cost is
+!!! info "Range query"
 
-```math
-O\left((N+M)\log(\max(N,M))+k\right),
-```
+    Searching for objects with relationship with MBR `W`:
 
-where $k$ is the number of intersecting pairs.
+    ```py
+    def range_query(W, node n):
+        if not n is leaf:
+            for c in n, predicate(c.MBR, W):
+                range_query(W, c.ptr)
+        else:
+            for c in n, predicate(c.MBR, W):
+                o = object(c.id)
+                if predicate(o, W) yield o
+    ```
 
-### Single-Index and No-Index Methods
+    Where `predicate` is the relationship between the object and the MBR, for example, `intersects`, `contains`, `equals`, etc.
 
-1. **Indexed Nested Loops Join** is used when only one relation is indexed. For every object in the non-indexed set, its MBR is used as a window query on the indexed R-tree.
-2. **Spatial Hash Join** is used when neither relation is indexed. It partitions the space into tiles and hashes objects into them to reduce the number of pairwise comparisons.
+### Nearest neighbor query
 
-### Multi-Step Refinement for Joins
+Problem: Given a query object `q`, find the object `o_nn` in the dataset that is closest to `q`.
 
-The join algorithms are part of the filter step. They produce candidate pairs of objects whose MBRs intersect.
+!!! info "Depth-first NN search"
 
-1. **Geometric filter:** Use a more detailed but still efficient approximation to eliminate more false positives.
-2. **Refinement:** For the remaining pairs, use the exact, computationally expensive geometry to determine the final result.
+    ```py
+    def nn_search(q, node n, o_nn): # init o at inf
+        if n is not leaf:
+            for c in n, dist(c.MBR, q) < dist(best.MBR, q):
+                nn_search(q, c.ptr, o_nn)
+        if n is leaf:
+            for c in n, dist(c.MBR, q) < dist(best.MBR, q):
+                o = object(c.id)
+                if dist(o, q) < dist(q, o_nn):
+                    o_nn = o
+    ```
+
+    **Pros**: Simple, easy to implement, and works well for small datasets.
+
+    **Cons**: For large datasets, it may traverse many nodes that are far away from the query object, which is inefficient.
+
+!!! info "Best-first NN search"
+
+    ```py
+    def nn_search(q, node n):
+        Q = priority_queue() # min-heap
+        Q.push(n, dist(n.MBR, q))
+        while not Q.empty():
+            n = Q.pop()
+            if n is leaf:
+                for c in n:
+                    o = object(c.id)
+                    if dist(o, q) < dist(q, o_nn):
+                        o_nn = o
+            else:
+                for c in n:
+                    Q.push(c.ptr, dist(c.MBR, q))
+    ```
+
+    **Pros**: Always traverses the closest nodes first, which is more efficient for large datasets.
+
+    **Cons**: More complex to implement and requires a priority queue.
+
+### Intersection joins
+
+!!! info "R-tree Join (Synchronized Traversal)"
+
+    **Core observation.** If two directory nodes, $n_R$ and $n_S$, have MBRs that do not intersect, then no object in the subtree of $n_R$ can intersect any object in the subtree of $n_S$.
+
+    The algorithm recursively traverses both trees in parallel, then only considers pairs of entries whose MBRs intersect.
+
+    ```py
+    def RJ(n_R, n_S):
+        for e_i in n_R:
+            for e_j in n_S:
+                if e_i.MBR.intersects(e_j.MBR):
+                    if n_R.is_leaf:
+                        report(e_i.oid, e_j.oid)
+                    else:
+                        RJ(e_i.ptr, e_j.ptr)
+    ```
+

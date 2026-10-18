@@ -1,0 +1,163 @@
+---
+title: Spatial Networks
+---
+
+In real applications, accessibility of objects is restricted by a spatial network. We are concerned with the **shorted path distance** instead of the Euclidean distance, which is no longer relevant. 
+
+To model spatial networks, we prefer **adjacency lists** instead of adjacency matrices due to the sparse nature of the networks.
+
+!!! note "Storing large spatial networks"
+
+    *Problem:* Adj. lists may not fit in memory if graph is large. 
+
+    *Solution:* 
+    * Partition adj. lists to disk blocks, based on proximity
+    * Create B+ tree index on top of partitions based on node IDs
+
+## Shortest Path Computation
+
+Given a graph $G = (V, E)$ with non-negative edge weights, the shortest path from node $s$ to node $t$ is the path that minimizes the sum of the weights of the edges along the path.
+
+!!! info "Dijkstra's Algorithm"
+
+    Time complexity: $O(|E| + |V| \log |V|)$ ($E$=number of edges, $V$=number of vertices)
+
+    1. Initialize a priority queue Q, with a source node 's' and distance 0. All other nodes have distance infinity.
+    2. Pop the node with the smallest distance from Q. If the node is unvisited, mark it as visited.
+    3. For each neighbor of the current node, calculate the tentative distance through the current node. If this tentative distance is less than the known distance, update the distance.
+    4. Repeat steps 2 and 3 until all nodes are visited or the target node is visited.
+
+    ```py
+    def dijkstra(adj, src):
+
+        V = len(adj)
+        # Min-heap (priority queue) storing pairs of (distance, node)
+        pq = []
+        dist = [inf] * V # distance to all nodes is infinity
+
+        # Distance from source to itself is 0
+        dist[src] = 0
+        heapq.heappush(pq, (0, src))
+
+        # Process the queue until all reachable vertices are finalized
+        while pq:
+            d, u = heapq.heappop(pq)
+
+            # If this distance not the latest shortest one, skip it
+            if d > dist[u]:
+                continue
+
+            # Explore all neighbors of the current vertex
+            for v, w in adj[u]:
+
+                # If we found a shorter path to v through u, update it
+                if dist[u] + w < dist[v]:
+                    dist[v] = dist[u] + w
+                    heapq.heappush(pq, (dist[v], v))
+
+        # Return the final shortest distances from the source
+        return dist
+    ```
+
+!!! info "A* Algorithm"
+
+    Improves Dijkstra's algorithm by directing the search towards the target node $t$.
+
+    For the heap queue, instead of using only distance from source as comparison (`dist[v] => spd(s, v)`), include the **Euclidean distance to target** as comparison (`dist[v] => spd(s, v) + ed(v, t)`).
+
+!!! info "Bi-directional search"
+
+    Instead of searching from the source node $s$ to the target node $t$, search from both the source and target nodes simultaneously.
+
+    * Use two queues $Q_s$ and $Q_t$
+    * Use `dist[v] => min(spd(s, v), spd(t, v))` as heap queue comparison
+    * If `v` visited by both $Q_s$ and $Q_t$, return the shortest path
+
+!!! note "Path materialization of large graphs"
+
+    ...
+
+## Spatial queries over spatial networks
+
+About how to use the various indexes and algorithms to answer spatial queries over spatial networks.
+
+### Methodology
+
+Spatial queries based on network distances:
+- **Selection** e.g. find nodes within d distance from s
+- **Nearest neighbour search** e.g. find nearest node to s
+- **Joins** e.g. find pairs of nodes with distance &lt;= d
+
+!!! tip "Indexed spatial network"
+
+    Consists of:
+    1. Stored edges & nodes in adjacency lists (Graph)
+    2. Indexed nodes (R-tree)
+    3. Indexed edges (B+ tree)
+
+!!! tip "Indexed set of spatial objects"
+
+    **Object R-trees.**
+
+    Objects (e.g. starting points, POIs) usually **lies on an edge**, not on a node directly. 
+    
+    Therefore, we need to find the nearest edge to the object and use that edge as a proxy for the object.
+
+    A query then runs in three steps:
+    1. Find query node via edge R-tree
+    2. Traverse the graph to find candidate objects
+    3. Use object R-tree to find objects on those edges
+
+!!! tip "Methods of query evaluation"
+
+    There are two methods we can evaluate each type of query:
+    * **Network browsing**: Fast if network is **dense**
+    * **Euclidean bounds**: Fast if network is **sparse**
+
+    *Assumption: Euclidean distance is a lower bound of the network distance* $\equiv$ `spd(v, u) >= ed(v, u)` $\forall$ `v, u`.
+
+### Selection queries
+
+Consider query: *"Find objects in spatial relation `R`, within (network) distance `d` from `s`"*
+
+!!! info "Selection via network browsing"
+
+    1. Find edge containing `s` via edge R-tree
+    2. Run dijkstra from `s` to find all edges `e_c` within distance `d`
+    3. For all `e_c` apply spatial selection on `R`'s R-tree
+
+!!! info "Selection via Euclidean bounds"
+
+    1. **Filter**: Use object R-tree to get candidates based on e-distance. `r_c: ed(s, r_c) <= d`
+    2. **Refine**: For each candidate `r_c`, find the nearest edge `e_c` via edge R-tree, and check if `spd(s, e_c) <= d`. If yes, return `r_c`.
+
+### NN queries
+
+Consider query: *"Find objects in spatial relation `R`, nearest to `s`"*
+
+!!! info "NN via network browsing"
+
+    1. Find edge containing `s` via edge R-tree
+    2. Use dijkstra to progressively get edges `e_c` in order of increasing distance from `s`
+    3. For each edge `e_c`, apply spatial selection on `R`'s R-tree. If any object found, return the nearest one.
+
+!!! info "NN via Euclidean bounds"
+
+    1. Find [euclidean NN](spatial#nn) `enn` via R-tree of `R`.
+    2. `bound = SPD(s, enn)` (A*)
+    3. Find `enn_2`
+    4. If `(ed(s, enn_2) >= bound) ?` 
+        * `return enn`
+        * `: enn = enn2, goto 2`
+
+### Join queries
+
+Consider query: *"Find pairs $(r,s)$ s.t. $r \in R$, $s \in S$, and `spd(r, s) <= d`"*
+
+!!! info "Join via network browsing"
+
+    **Index nested loops**: For each object `r` in `R`, run euclidean selection on `S`
+
+!!! info "Join via Euclidean bounds"
+
+    **Euclidean filter-refine**: for each pair `r_c` and `s_c` s.t. `ed(r_c, s_c) <= d`, return all where `spd(r_c, s_c) <= d`
