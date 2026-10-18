@@ -196,22 +196,92 @@ Problem: Given a query object `q`, find the object `o_nn` in the dataset that is
 
     **Cons**: More complex to implement and requires a priority queue.
 
-### Intersection joins
+### Indexed intersection joins
 
-!!! info "R-tree Join (Synchronized Traversal)"
+If both datasets are indexed by R-trees, we can perform a R-tree join (RJ) to find all pairs of objects that intersect:
+
+!!! info "R-tree Join (Synchronized Traversal / RJ)"
 
     **Core observation.** If two directory nodes, $n_R$ and $n_S$, have MBRs that do not intersect, then no object in the subtree of $n_R$ can intersect any object in the subtree of $n_S$.
 
     The algorithm recursively traverses both trees in parallel, then only considers pairs of entries whose MBRs intersect.
 
+    Consider query: *"Find pairs $(r,s)$ s.t. $r \in R$, $s \in S$, and `r.MBR.intersects(s.MBR)`"* ($R, S$ are nodes of R-trees of two datasets)
+
     ```py
-    def RJ(n_R, n_S):
-        for e_i in n_R:
-            for e_j in n_S:
-                if e_i.MBR.intersects(e_j.MBR):
-                    if n_R.is_leaf:
-                        report(e_i.oid, e_j.oid)
-                    else:
-                        RJ(e_i.ptr, e_j.ptr)
+    def RJ(R, S):
+        for (r, s) in R x S: # unoptimized
+            if r.MBR.intersects(s.MBR): # unoptimized
+                if R.is_leaf:
+                    yield (r.oid, s.oid)
+                else:
+                    RJ(r.ptr, s.ptr)
     ```
 
+!!! info "RJ Optimizations"
+
+    We can perform optimizations on `R x S` to reduce the number of pairs we need to consider:
+
+    ```py
+    def RJ(R, S):
+        # perform space restriction to reduce the number of pairs to consider
+        R_sr, S_sr = sr(R, S) 
+        # planesweep to find intersecting pairs instead of looping through all pairs
+        for (r, s) in planesweep(R_sr, S_sr): 
+            if R.is_leaf:
+                yield (r.oid, s.oid)
+            else:
+                RJ(r.ptr, s.ptr)
+    ```
+
+    *Space restriction*: Only consider entries which intersect with the MBR of the other parent node:
+
+    ```py
+    def sr(R, S):
+        I: MBR = R.MBR.intersection(S.MBR)
+
+        R_sr = {r in R | r.MBR.intersects(I)}
+        S_sr = {s in S | s.MBR.intersects(I)}
+        return R_sr, S_sr
+    ```
+
+    *Sweep join*: Sort entries by their lower x-coordinate, then only consider pairs whose x-intervals overlap. Total cost is $O((N+M)\cdot log(max(N,M)) + k)$
+
+    Steps:
+    1. **Sort** both lists by the lower x-value of each MBR (the left edge).
+    2. **Sweep** a vertical line left to right. At each step, take whichever list has the entry with the smaller lower-x. Call that entry `t`.
+    3. **Scan forward in the other list** from its current position, for as long as the entries there start at or before `t`’s right edge (x-overlap). For each such entry, check y-overlap. Report the pair if it overlaps. Then advance past `t` in its own list.
+
+### Partially indexed intersection joins
+
+*Indexed nested loops* runs a window query on the R-tree for every object of the unindexed set. It is simple, but one query per object adds up.
+
+*Seeded tree join and Bulk-load and Match* build an R-tree on the fly for the unindexed set, then use R-tree join.
+
+*Sort and Match* sorts the raw data and packs leaf nodes, but never builds the upper levels. It matches the packed nodes directly against the existing tree.
+
+*Slot-index spatial join* hashes the raw data against entries of a high level of the R-tree, then matches each bucket in memory with plane sweep.
+
+### Refinement step
+
+An MBR pair that intersects may still have non-intersecting objects (a false hit). Running exact geometry tests on every candidate is expensive, so a cheap middle step is added:
+
+1. *Step 1*: MBR intersection, which is the R-tree join.
+2. *Step 2*: use better approximations of each object.
+    * Conservative approximations (e.g., convex hull) contain the object. If these don’t intersect, the pair is definitely a false hit and can be discarded.
+    * Progressive approximations (e.g., maximum enclosed rectangle) lie inside the object. If these intersect, the pair is definitely a true hit and can be reported immediately.
+3. *Step 3*: only pairs still undecided go to exact computational-geometry tests.
+
+This is the same filter-and-refine idea you saw earlier for selections, with an extra stage to avoid most of the exact tests.
+
+## Non-indexed intersection joins
+
+If the two datasets are *not indexed*, we can use the following methods for intersection joins:
+
+!!! info "Spatial hash join"
+
+    Partitions both sets irregularly, with partitions adapted to the data.
+
+!!! info "Partition based spatial merge join"
+
+    Uses regular tiles, hashes objects into the tiles they overlap, and then joins each tile.
